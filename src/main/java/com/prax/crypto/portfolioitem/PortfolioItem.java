@@ -34,10 +34,11 @@ public class PortfolioItem {
     public PortfolioItem() {
     }
 
-    public PortfolioItem(BigDecimal amount, String currency, LocalDateTime dateOfPurchase) {
+    public PortfolioItem(BigDecimal amount, String currency, LocalDateTime dateOfPurchase, AppUser appUser) {
         this.amount = amount;
         this.currency = currency;
         this.dateOfPurchase = dateOfPurchase;
+        this.appUser = appUser;
     }
 
     public Integer getId() {

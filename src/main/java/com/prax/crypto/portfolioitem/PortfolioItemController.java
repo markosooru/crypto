@@ -1,5 +1,6 @@
 package com.prax.crypto.portfolioitem;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,26 +16,27 @@ public class PortfolioItemController {
     }
 
     @GetMapping
-    public List<PortfolioItem> findAll() {
+    public List<PortfolioItemResponseDto> findAll() {
         return this.service.findAll();
     }
 
     @GetMapping("/{id}")
-    public PortfolioItem findById(@PathVariable Integer id) {
+    public PortfolioItemResponseDto findById(@PathVariable Integer id) {
         return this.service.findById(id);
     }
 
     @PostMapping
-    public PortfolioItem createPortfolioItem(@RequestBody PortfolioItem item) {
+    public PortfolioItemResponseDto createPortfolioItem(@RequestBody PortfolioItemDto item) {
         return this.service.createPortfolioItem(item);
     }
 
     @PutMapping("/{id}")
-    public PortfolioItem updatePortfolioItem(@PathVariable Integer id, @RequestBody PortfolioItem item) {
+    public PortfolioItemResponseDto updatePortfolioItem(@PathVariable Integer id, @RequestBody PortfolioItemDto item) {
         return this.service.updatePortfolioItem(id, item);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletePortfolioItem(@PathVariable Integer id) {
         this.service.deletePortfolioItem(id);
     }
