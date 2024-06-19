@@ -14,45 +14,45 @@ Application will be available at `http://localhost:8080`
 
 ## AppUser endpoints
 
-#### GET /api/users
+#### GET /api/appusers
 
 - Returns a list of all users
 
-#### GET /api/users/{id}
+#### GET /api/appusers/{id}
 
 - Returns a user by id
 
-#### POST /api/users
+#### POST /api/appusers
 
 - Creates a new user using `userDTO`
 
-#### PUT /api/users/{id}
+#### PUT /api/appusers/{id}
 
 - Updates a user by id
 
-#### DELETE /api/users/{id}
+#### DELETE /api/appusers/{id}
 
 - Deletes a user by id
 
 ## PortfolioItem endpoints
 
-#### GET /api/portfolio
+#### GET /api/portfolioitems
 
 - Returns a list of all portfolio items
 
-#### GET /api/portfolio/{id}
+#### GET /api/portfolioitems/{id}
 
 - Returns a portfolio item by id
 
-#### POST /api/portfolio
+#### POST /api/portfolioitems
 
 - Creates a new portfolio item using `portfolioItemDTO`
 
-#### PUT /api/portfolio/{id}
+#### PUT /api/portfolioitems/{id}
 
 - Updates a portfolio item by id
 
-#### DELETE /api/portfolio/{id}
+#### DELETE /api/portfolioitems/{id}
 
 - Deletes a portfolio item by id
 
