@@ -35,17 +35,17 @@ public class PortfolioController {
 
     @PostMapping
     public PortfolioResponseDto createPortfolioItem(@RequestBody PortfolioDto item) {
-        return portfolioService.createPortfolioItem(item);
+        return portfolioService.createPortfolio(item);
     }
 
     @PutMapping("/{id}")
     public PortfolioResponseDto updatePortfolioItem(@PathVariable Integer id, @RequestBody PortfolioDto item) {
-        return portfolioService.updatePortfolioItem(id, item);
+        return portfolioService.updatePortfolio(id, item);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletePortfolioItem(@PathVariable Integer id) {
-        portfolioService.deletePortfolioItem(id);
+        portfolioService.deletePortfolio(id);
     }
 }

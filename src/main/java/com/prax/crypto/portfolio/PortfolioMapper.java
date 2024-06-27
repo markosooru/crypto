@@ -10,17 +10,12 @@ import java.math.BigDecimal;
 public class PortfolioMapper {
 
     private final AppUserRepository appUserRepository;
-    private final BitfinexService bitfinexService;
 
     public PortfolioMapper(AppUserRepository appUserRepository, BitfinexService bitfinexService) {
         this.appUserRepository = appUserRepository;
-        this.bitfinexService = bitfinexService;
     }
 
-    public PortfolioResponseDto toResponseDto(Portfolio portfolio) {
-        BigDecimal currentPriceInEUR = bitfinexService.getCurrentPriceInEUR(portfolio.getCurrency());
-        BigDecimal amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
-
+    public PortfolioResponseDto toResponseDto(Portfolio portfolio, BigDecimal amountEur) {
         return new PortfolioResponseDto(
                 portfolio.getAmount(),
                 portfolio.getCurrency(),
