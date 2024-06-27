@@ -1,4 +1,4 @@
-package com.prax.crypto.appuser;
+package com.prax.crypto.account;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

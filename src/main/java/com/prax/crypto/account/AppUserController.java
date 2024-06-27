@@ -1,4 +1,4 @@
-package com.prax.crypto.appuser;
+package com.prax.crypto.account;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -9,36 +9,36 @@ import java.util.List;
 @RequestMapping("api/appusers")
 public class AppUserController {
 
-    private final AppUserService service;
+    private final AppUserService appUserService;
 
-    public AppUserController(AppUserService service) {
-        this.service = service;
+    public AppUserController(AppUserService appUserService) {
+        this.appUserService = appUserService;
     }
 
     @GetMapping
     public List<AppUser> findAll() {
-        return this.service.findAll();
+        return this.appUserService.findAll();
     }
 
     @GetMapping("/{id}")
     public AppUser findById(@PathVariable Integer id) {
-        return this.service.findById(id);
+        return this.appUserService.findById(id);
     }
 
     @PostMapping
     public AppUser createAppUser(@RequestBody AppUser user) {
-        return this.service.createAppUser(user);
+        return this.appUserService.createAppUser(user);
     }
 
     @PutMapping("/{id}")
     public AppUser updateAppUser(@PathVariable Integer id, @RequestBody AppUser user) {
-        return this.service.updateAppUser(id, user);
+        return this.appUserService.updateAppUser(id, user);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteAppUser(@PathVariable Integer id) {
-        this.service.deleteAppUser(id);
+        this.appUserService.deleteAppUser(id);
     }
 
 }
