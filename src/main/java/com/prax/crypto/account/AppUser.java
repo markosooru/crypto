@@ -2,7 +2,11 @@ package com.prax.crypto.account;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.prax.crypto.portfolio.Portfolio;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
