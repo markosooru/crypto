@@ -1,6 +1,7 @@
 package com.prax.crypto.portfolio;
 
 import com.prax.crypto.bitfinex.BitfinexService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +36,7 @@ public class PortfolioService {
 
     @Transactional
     public List<PortfolioResponseDto> findAll() {
-        return portfolioRepository.findAll()
+        return portfolioRepository.findAllActive()
                 .stream()
                 .map(portfolio -> {
                     BigDecimal currentPriceInEUR = bitfinexService
@@ -49,7 +50,7 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioResponseDto findById(Integer id) {
-        return portfolioRepository.findById(id)
+        return portfolioRepository.findActiveById(id)
                 .map(portfolio -> {
                     BigDecimal currentPriceInEUR = bitfinexService
                             .getTicker(portfolio.getCurrency())
@@ -57,27 +58,30 @@ public class PortfolioService {
                     BigDecimal amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
                     return portfolioMapper.toResponseDto(portfolio, amountEur);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
     }
 
     @Transactional
     public PortfolioResponseDto updatePortfolio(Integer id, PortfolioDto item) {
+        portfolioRepository
+                .findActiveById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
+
         BigDecimal currentPriceInEUR = bitfinexService
                 .getTicker(item.currency())
                 .lastPrice();
         BigDecimal amountEur = currentPriceInEUR.multiply(item.amount());
 
-
-        var existingItem = portfolioRepository.findById(id).orElse(null);
-        if (existingItem == null) {
-            return null;
-        }
         var updatedItem = portfolioMapper.toEntity(item);
         var savedItem = portfolioRepository.save(updatedItem);
         return portfolioMapper.toResponseDto(savedItem, amountEur);
     }
 
     public void deletePortfolio(Integer id) {
-        portfolioRepository.deleteById(id);
+        Portfolio item = portfolioRepository
+                .findActiveById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
+        item.setDeleted(true);
+        portfolioRepository.save(item);
     }
 }

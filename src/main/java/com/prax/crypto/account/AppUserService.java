@@ -1,5 +1,6 @@
 package com.prax.crypto.account;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +23,13 @@ public class AppUserService {
     }
 
     public AppUser findById(Integer id) {
-        return appUserRepository.findById(id).orElse(null);
+        return appUserRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     public AppUser updateAppUser(Integer id, AppUser user) {
-        var existingUser = appUserRepository.findById(id).orElse(null);
-        if (existingUser == null) {
-            return null;
-        }
+        appUserRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
         return appUserRepository.save(user);
     }
 
