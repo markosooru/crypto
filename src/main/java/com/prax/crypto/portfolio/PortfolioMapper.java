@@ -17,8 +17,8 @@ public class PortfolioMapper {
         this.bitfinexService = bitfinexService;
     }
 
-    public PortfolioResponseDto toPortfolioResponseDto(Portfolio portfolio) {
-        BigDecimal currentPriceInEUR = this.bitfinexService.getCurrentPriceInEUR(portfolio.getCurrency());
+    public PortfolioResponseDto toResponseDto(Portfolio portfolio) {
+        BigDecimal currentPriceInEUR = bitfinexService.getCurrentPriceInEUR(portfolio.getCurrency());
         BigDecimal amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
 
         return new PortfolioResponseDto(
@@ -30,8 +30,8 @@ public class PortfolioMapper {
         );
     }
 
-    public Portfolio toPortfolio(PortfolioDto portfolioDto) {
-        var existingUser = this.appUserRepository.findById(portfolioDto.appUserId()).orElse(null);
+    public Portfolio toEntity(PortfolioDto portfolioDto) {
+        var existingUser = appUserRepository.findById(portfolioDto.appUserId()).orElse(null);
         if (existingUser == null) {
             return null;
         }

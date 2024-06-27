@@ -14,26 +14,26 @@ public class AppUserService {
     }
 
     public AppUser createAppUser(AppUser user) {
-        return this.appUserRepository.save(user);
+        return appUserRepository.save(user);
     }
 
     public List<AppUser> findAll() {
-        return this.appUserRepository.findAll();
+        return appUserRepository.findAll();
     }
 
     public AppUser findById(Integer id) {
-        return this.appUserRepository.findById(id).orElse(null);
+        return appUserRepository.findById(id).orElse(null);
     }
 
     public AppUser updateAppUser(Integer id, AppUser user) {
-        var existingUser = this.appUserRepository.findById(id).orElse(null);
+        var existingUser = appUserRepository.findById(id).orElse(null);
         if (existingUser == null) {
             return null;
         }
-        return this.appUserRepository.save(user);
+        return appUserRepository.save(user);
     }
 
     public void deleteAppUser(Integer id) {
-        this.appUserRepository.deleteById(id);
+        appUserRepository.deleteById(id);
     }
 }

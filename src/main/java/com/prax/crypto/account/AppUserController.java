@@ -17,17 +17,17 @@ public class AppUserController {
 
     @GetMapping
     public List<AppUser> findAll() {
-        return this.appUserService.findAll();
+        return appUserService.findAll();
     }
 
     @GetMapping("/{id}")
     public AppUser findById(@PathVariable Integer id) {
-        return this.appUserService.findById(id);
+        return appUserService.findById(id);
     }
 
     @PostMapping
     public AppUser createAppUser(@RequestBody AppUser user) {
-        return this.appUserService.createAppUser(user);
+        return appUserService.createAppUser(user);
     }
 
     @PutMapping("/{id}")

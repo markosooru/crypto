@@ -17,27 +17,27 @@ public class PortfolioController {
 
     @GetMapping
     public List<PortfolioResponseDto> findAll() {
-        return this.portfolioService.findAll();
+        return portfolioService.findAll();
     }
 
     @GetMapping("/{id}")
     public PortfolioResponseDto findById(@PathVariable Integer id) {
-        return this.portfolioService.findById(id);
+        return portfolioService.findById(id);
     }
 
     @PostMapping
     public PortfolioResponseDto createPortfolioItem(@RequestBody PortfolioDto item) {
-        return this.portfolioService.createPortfolioItem(item);
+        return portfolioService.createPortfolioItem(item);
     }
 
     @PutMapping("/{id}")
     public PortfolioResponseDto updatePortfolioItem(@PathVariable Integer id, @RequestBody PortfolioDto item) {
-        return this.portfolioService.updatePortfolioItem(id, item);
+        return portfolioService.updatePortfolioItem(id, item);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deletePortfolioItem(@PathVariable Integer id) {
-        this.portfolioService.deletePortfolioItem(id);
+        portfolioService.deletePortfolioItem(id);
     }
 }

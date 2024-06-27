@@ -17,12 +17,12 @@ class PortfolioMapperTest {
     }
 
     @Test
-    void toPortfolioResponseDto() {
+    void toResponseDto() {
         // given
         // var appUser = new AppUser("testman", ") ;
     }
 
     @Test
-    void toPortfolio() {
+    void toEntity() {
     }
 }
