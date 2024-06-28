@@ -38,7 +38,7 @@ public class Portfolio {
     @PastOrPresent(message = "Date of purchase must be in the past or present")
     private LocalDateTime dateOfPurchase;
 
-    private boolean deleted = false;
+    private boolean isDeleted = false;
 
     @ManyToOne
     @JoinColumn(name = "app_user_id")

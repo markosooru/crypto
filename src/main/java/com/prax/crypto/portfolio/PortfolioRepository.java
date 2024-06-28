@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PortfolioRepository extends JpaRepository<Portfolio, Integer> {
-    @Query("SELECT p FROM Portfolio p WHERE p.deleted = false")
+    @Query("SELECT p FROM Portfolio p WHERE p.isDeleted = false")
     List<Portfolio> findAllActive();
 
-    @Query("SELECT p FROM Portfolio p WHERE p.id = :id AND p.deleted = false")
+    @Query("SELECT p FROM Portfolio p WHERE p.id = :id AND p.isDeleted = false")
     Optional<Portfolio> findActiveById(@Param("id") Integer id);
 }

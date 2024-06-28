@@ -4,6 +4,6 @@ create table portfolio (
     app_user_id integer,
     date_of_purchase timestamp(6) not null,
     currency varchar(255) not null,
-    deleted boolean not null,
+    is_deleted boolean DEFAULT false not null,
     primary key (id)
 );

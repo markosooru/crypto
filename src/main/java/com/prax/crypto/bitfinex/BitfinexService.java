@@ -14,12 +14,12 @@ public class BitfinexService {
 
     private static final String TICKER_URL = "https://api.bitfinex.com/v2/ticker/";
 
-    public BitfinexService(RestClient.Builder builder) {
-        this.restClient = builder.build();
+    public BitfinexService(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public Ticker getTicker(String cryptoCurrency) {
-        String symbol = "t" + cryptoCurrency + "EUR"; // Format the symbol as t{CRYPTO}EUR
+        String symbol = "t" + cryptoCurrency + "EUR";
         try {
             BigDecimal[] tickerData = restClient.get()
                     .uri(TICKER_URL + symbol)
