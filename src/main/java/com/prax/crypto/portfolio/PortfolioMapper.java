@@ -1,7 +1,6 @@
 package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUserRepository;
-import com.prax.crypto.bitfinex.BitfinexService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,7 +10,7 @@ public class PortfolioMapper {
 
     private final AppUserRepository appUserRepository;
 
-    public PortfolioMapper(AppUserRepository appUserRepository, BitfinexService bitfinexService) {
+    public PortfolioMapper(AppUserRepository appUserRepository) {
         this.appUserRepository = appUserRepository;
     }
 
@@ -26,10 +25,8 @@ public class PortfolioMapper {
     }
 
     public Portfolio toEntity(PortfolioDto portfolioDto) {
-        var existingUser = appUserRepository.findById(portfolioDto.appUserId()).orElse(null);
-        if (existingUser == null) {
-            return null;
-        }
+        var existingUser = appUserRepository.findById(portfolioDto.appUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         return Portfolio.builder()
                 .amount(portfolioDto.amount())

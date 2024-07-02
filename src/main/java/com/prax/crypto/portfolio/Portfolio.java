@@ -38,6 +38,7 @@ public class Portfolio {
     @PastOrPresent(message = "Date of purchase must be in the past or present")
     private LocalDateTime dateOfPurchase;
 
+    @Builder.Default
     private boolean isDeleted = false;
 
     @ManyToOne

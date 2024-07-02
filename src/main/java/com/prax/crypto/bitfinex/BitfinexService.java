@@ -26,7 +26,7 @@ public class BitfinexService {
                     .retrieve()
                     .body(BigDecimal[].class);
 
-            if (tickerData != null && tickerData.length >= 10) {
+            if (tickerData != null && tickerData.length == 10) {
                 return new Ticker(
                         tickerData[0],  // bid
                         tickerData[1],  // bidSize
