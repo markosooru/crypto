@@ -1,18 +1,16 @@
 package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@AllArgsConstructor
 public class PortfolioMapper {
 
     private final AppUserRepository appUserRepository;
-
-    public PortfolioMapper(AppUserRepository appUserRepository) {
-        this.appUserRepository = appUserRepository;
-    }
 
     public PortfolioResponseDto toResponseDto(Portfolio portfolio, BigDecimal amountEur) {
         return new PortfolioResponseDto(

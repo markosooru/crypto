@@ -1,22 +1,19 @@
 package com.prax.crypto.bitfinex;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 import java.math.BigDecimal;
 
-
 @Service
+@AllArgsConstructor
 public class BitfinexService {
 
     private final RestClient restClient;
 
     private static final String TICKER_URL = "https://api.bitfinex.com/v2/ticker/";
-
-    public BitfinexService(RestClient restClient) {
-        this.restClient = restClient;
-    }
 
     public Ticker getTicker(String cryptoCurrency) {
         String symbol = "t" + cryptoCurrency + "EUR";
@@ -43,7 +40,7 @@ public class BitfinexService {
                 throw new RestClientException("Invalid response from API");
             }
         } catch (RestClientException e) {
-            throw new RuntimeException("Failed to fetch ticker data", e);
+            throw new RestClientException("Failed to fetch ticker data", e);
         }
     }
 }

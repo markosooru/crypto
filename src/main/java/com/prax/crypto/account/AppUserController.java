@@ -1,5 +1,6 @@
 package com.prax.crypto.account;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +16,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/appusers")
+@AllArgsConstructor
 public class AppUserController {
 
     private final AppUserService appUserService;
 
-    public AppUserController(AppUserService appUserService) {
-        this.appUserService = appUserService;
+    @PostMapping
+    public AppUser create(@RequestBody AppUser user) {
+        return appUserService.create(user);
     }
 
     @GetMapping
@@ -33,20 +36,14 @@ public class AppUserController {
         return appUserService.findById(id);
     }
 
-    @PostMapping
-    public AppUser createAppUser(@RequestBody AppUser user) {
-        return appUserService.createAppUser(user);
-    }
-
     @PutMapping("/{id}")
-    public AppUser updateAppUser(@PathVariable Integer id, @RequestBody AppUser user) {
-        return this.appUserService.updateAppUser(id, user);
+    public AppUser update(@PathVariable Integer id, @RequestBody AppUser user) {
+        return this.appUserService.update(id, user);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void deleteAppUser(@PathVariable Integer id) {
-        this.appUserService.deleteAppUser(id);
+    public void delete(@PathVariable Integer id) {
+        this.appUserService.delete(id);
     }
-
 }

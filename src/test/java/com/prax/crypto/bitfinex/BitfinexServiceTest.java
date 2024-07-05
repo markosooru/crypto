@@ -1,18 +1,21 @@
 package com.prax.crypto.bitfinex;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class BitfinexServiceTest {
 
     @InjectMocks
@@ -30,15 +33,10 @@ class BitfinexServiceTest {
     @Mock
     private RestClient.ResponseSpec responseSpec;
 
-    private static final String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
-    void getTicker_Success() {
+    void GetTicker_RetrievesDataAndMapsToTicker() {
+        // given
+        String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
         BigDecimal[] tickerData = {
                 new BigDecimal("10000.0"), // bid
                 new BigDecimal("10.0"),    // bidSize
@@ -52,13 +50,16 @@ class BitfinexServiceTest {
                 new BigDecimal("9900.0")   // low
         };
 
+        // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(TICKER_URL)).thenAnswer(invocation -> requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenAnswer(invocation -> responseSpec);
         when(responseSpec.body(BigDecimal[].class)).thenReturn(tickerData);
 
+        // when
         Ticker ticker = bitfinexService.getTicker("BTC");
 
+        // then
         assertNotNull(ticker);
         assertEquals(tickerData[0], ticker.bid());
         assertEquals(tickerData[1], ticker.bidSize());
@@ -73,25 +74,33 @@ class BitfinexServiceTest {
     }
 
     @Test
-    void getTicker_InvalidResponse() {
+    void GetTicker_InvalidResponseThrowsRestClientException() {
+        // given
         BigDecimal[] invalidTickerData = {new BigDecimal("10000.0")};
+        String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
 
+        // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(TICKER_URL)).thenAnswer(invocation -> requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenAnswer(invocation -> responseSpec);
         when(responseSpec.body(BigDecimal[].class)).thenReturn(invalidTickerData);
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> bitfinexService.getTicker("BTC"));
-        assertInstanceOf(RestClientException.class, thrown.getCause());
+        // when & then
+        assertThrows(RuntimeException.class, () -> bitfinexService.getTicker("BTC"));
     }
 
     @Test
-    void getTicker_RestClientException() {
+    void GetTicker_ApiFailureThrowsRestClientException() {
+        // given
+        String TICKER_URL = "https://api.bitfinex.com/v2/ticker/yBTCEUR";
+
+        // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
         when(requestHeadersUriSpec.uri(TICKER_URL)).thenAnswer(invocation -> requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenAnswer(invocation -> responseSpec);
         when(responseSpec.body(BigDecimal[].class)).thenThrow(new RestClientException("API failure"));
 
+        // when & then
         assertThrows(RuntimeException.class, () -> bitfinexService.getTicker("BTC"));
     }
 }

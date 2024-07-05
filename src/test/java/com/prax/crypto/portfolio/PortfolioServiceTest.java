@@ -4,13 +4,13 @@ import com.prax.crypto.account.AppUser;
 import com.prax.crypto.bitfinex.BitfinexService;
 import com.prax.crypto.bitfinex.Ticker;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PortfolioServiceTest {
 
     @InjectMocks
@@ -39,23 +40,13 @@ class PortfolioServiceTest {
     @Captor
     private ArgumentCaptor<Portfolio> portfolioCaptor;
 
-    private PortfolioDto portfolioDto;
-    private Portfolio portfolio;
-    private PortfolioResponseDto portfolioResponseDto;
-    private Ticker ticker;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        portfolioDto = new PortfolioDto(
-                new BigDecimal("2.0"),
-                "BTC",
-                LocalDateTime.now().minusDays(1),
-                1
-        );
-
+    @Test
+    void Create_SavesPortfolioAndReturnsResponseDto() {
+        // given
         AppUser appUser = AppUser.builder().id(1).build();
-        portfolio = new Portfolio(
+        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+
+        Portfolio portfolio = new Portfolio(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -64,7 +55,14 @@ class PortfolioServiceTest {
                 appUser
         );
 
-        portfolioResponseDto = new PortfolioResponseDto(
+        PortfolioDto portfolioDto = new PortfolioDto(
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                1
+        );
+
+        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
@@ -72,75 +70,138 @@ class PortfolioServiceTest {
                 new BigDecimal("60000.0")
         );
 
-        ticker = new Ticker(
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                new BigDecimal("30000.0"),
-                BigDecimal.ZERO,
-                BigDecimal.ZERO,
-                BigDecimal.ZERO
-        );
-    }
-
-    @Test
-    void createPortfolio() {
+        // mock
         when(bitfinexService.getTicker(portfolioDto.currency())).thenReturn(ticker);
         when(portfolioMapper.toEntity(portfolioDto)).thenReturn(portfolio);
         when(portfolioRepository.save(portfolio)).thenReturn(portfolio);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
                 .thenReturn(portfolioResponseDto);
 
-        PortfolioResponseDto result = portfolioService.createPortfolio(portfolioDto);
+        // when
+        PortfolioResponseDto result = portfolioService.create(portfolioDto);
 
+        // then
         assertEquals(portfolioResponseDto, result);
         verify(portfolioRepository).save(portfolioCaptor.capture());
         assertEquals(portfolio, portfolioCaptor.getValue());
     }
 
     @Test
-    void findAll() {
+    void FindAll_ReturnsListOfPortfolios() {
+        // given
+        AppUser appUser = AppUser.builder().id(1).build();
+        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+
+        Portfolio portfolio = new Portfolio(
+                1,
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+
+        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                1,
+                new BigDecimal("60000.0")
+        );
+
+        // mock
         when(portfolioRepository.findAllActive()).thenReturn(List.of(portfolio));
         when(bitfinexService.getTicker(portfolio.getCurrency())).thenReturn(ticker);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
                 .thenReturn(portfolioResponseDto);
 
+        // when
         List<PortfolioResponseDto> result = portfolioService.findAll();
 
+        // then
         assertEquals(1, result.size());
         assertEquals(portfolioResponseDto, result.getFirst());
         verify(portfolioRepository).findAllActive();
     }
 
     @Test
-    void findById() {
+    void FindById_ReturnsResponseDto() {
+        // given
+        AppUser appUser = AppUser.builder().id(1).build();
+        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+
+        Portfolio portfolio = new Portfolio(
+                1,
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+
+        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                1,
+                new BigDecimal("60000.0")
+        );
+
+        // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.of(portfolio));
         when(bitfinexService.getTicker(portfolio.getCurrency())).thenReturn(ticker);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
                 .thenReturn(portfolioResponseDto);
 
+        // when
         PortfolioResponseDto result = portfolioService.findById(1);
 
+        // then
         assertEquals(portfolioResponseDto, result);
         verify(portfolioRepository).findActiveById(1);
     }
 
     @Test
-    void findById_NotFound() {
+    void FindById_ThrowsEntityNotFoundExceptionWhenIdNotFound() {
+        // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> portfolioService.findById(1));
-
-        assertEquals("Portfolio item not found", exception.getMessage());
+        // when & then
+        assertThrows(EntityNotFoundException.class, () -> portfolioService.findById(1));
         verify(portfolioRepository).findActiveById(1);
     }
 
     @Test
-    void updatePortfolio() {
+    void Update_SavesPortfolioAndReturnsResponseDto() {
+        // given
+        AppUser appUser = AppUser.builder().id(1).build();
+        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+
+        Portfolio portfolio = new Portfolio(
+                1,
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+
+        PortfolioDto portfolioDto = new PortfolioDto(
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                1
+        );
+
+        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                1,
+                new BigDecimal("60000.0")
+        );
+
+        // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.of(portfolio));
         when(bitfinexService.getTicker(portfolioDto.currency())).thenReturn(ticker);
         when(portfolioMapper.toEntity(portfolioDto)).thenReturn(portfolio);
@@ -148,8 +209,10 @@ class PortfolioServiceTest {
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
                 .thenReturn(portfolioResponseDto);
 
-        PortfolioResponseDto result = portfolioService.updatePortfolio(1, portfolioDto);
+        // when
+        PortfolioResponseDto result = portfolioService.update(1, portfolioDto);
 
+        // then
         assertEquals(portfolioResponseDto, result);
         verify(portfolioRepository).findActiveById(1);
         verify(portfolioRepository).save(portfolioCaptor.capture());
@@ -157,35 +220,56 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void updatePortfolio_NotFound() {
+    void Update_ThrowsEntityNotFoundExceptionWhenIdNotFound() {
+        // given
+        PortfolioDto portfolioDto = new PortfolioDto(
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                1
+        );
+
+        // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> portfolioService.updatePortfolio(1, portfolioDto));
-
-        assertEquals("Portfolio item not found", exception.getMessage());
+        // when & then
+        assertThrows(EntityNotFoundException.class, () -> portfolioService.update(1, portfolioDto));
         verify(portfolioRepository).findActiveById(1);
     }
 
     @Test
-    void deletePortfolio() {
+    void Delete_SetsDeletedFlagToTrue() {
+        // given
+        AppUser appUser = AppUser.builder().id(1).build();
+
+        Portfolio portfolio = new Portfolio(
+                1,
+                new BigDecimal("2.0"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+
+        // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.of(portfolio));
 
-        portfolioService.deletePortfolio(1);
+        // when
+        portfolioService.delete(1);
 
+        // then
         assertTrue(portfolio.isDeleted());
         verify(portfolioRepository).save(portfolioCaptor.capture());
         assertEquals(portfolio, portfolioCaptor.getValue());
     }
 
     @Test
-    void deletePortfolio_NotFound() {
+    void Delete_ThrowsEntityNotFoundExceptionWhenIdNotFound() {
+        // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.empty());
 
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> portfolioService.deletePortfolio(1));
-
-        assertEquals("Portfolio item not found", exception.getMessage());
+        // when & then
+        assertThrows(EntityNotFoundException.class, () -> portfolioService.delete(1));
         verify(portfolioRepository).findActiveById(1);
     }
 }

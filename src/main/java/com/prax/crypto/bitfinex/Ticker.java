@@ -1,7 +1,10 @@
 package com.prax.crypto.bitfinex;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 
+@Builder
 public record Ticker(
     BigDecimal bid,
     BigDecimal bidSize,

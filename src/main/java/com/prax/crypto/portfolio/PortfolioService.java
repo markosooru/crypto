@@ -2,6 +2,7 @@ package com.prax.crypto.portfolio;
 
 import com.prax.crypto.bitfinex.BitfinexService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,20 +11,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
     private final PortfolioMapper portfolioMapper;
     private final BitfinexService bitfinexService;
 
-    public PortfolioService(PortfolioRepository portfolioRepository, PortfolioMapper portfolioMapper, BitfinexService bitfinexService) {
-        this.portfolioRepository = portfolioRepository;
-        this.portfolioMapper = portfolioMapper;
-        this.bitfinexService = bitfinexService;
-    }
-
     @Transactional
-    public PortfolioResponseDto createPortfolio(PortfolioDto item) {
+    public PortfolioResponseDto create(PortfolioDto item) {
         BigDecimal currentPriceInEUR = bitfinexService
                 .getTicker(item.currency())
                 .lastPrice();
@@ -62,7 +58,7 @@ public class PortfolioService {
     }
 
     @Transactional
-    public PortfolioResponseDto updatePortfolio(Integer id, PortfolioDto item) {
+    public PortfolioResponseDto update(Integer id, PortfolioDto item) {
         portfolioRepository
                 .findActiveById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
@@ -77,7 +73,7 @@ public class PortfolioService {
         return portfolioMapper.toResponseDto(savedItem, amountEur);
     }
 
-    public void deletePortfolio(Integer id) {
+    public void delete(Integer id) {
         Portfolio item = portfolioRepository
                 .findActiveById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
