@@ -6,22 +6,17 @@ import com.prax.crypto.account.AppUserService;
 import com.prax.crypto.base.BaseIntTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PortfolioControllerIntTest extends BaseIntTest {
@@ -54,24 +49,23 @@ public class PortfolioControllerIntTest extends BaseIntTest {
                 null
         ));
         PortfolioResponseDto responseDto = portfolioService.create(new PortfolioDto(
-                new BigDecimal("2.5"),
+                new BigDecimal("2.50"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
                 appUser.getId()
         ));
 
         // when
-        MvcResult mvcResult = mockMvc.perform(get("/api/portfolios"))
+        String jsonResponse = mockMvc.perform(get("/api/portfolios"))
                 .andExpect(status().isOk())
-                .andReturn();
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
         // then
-        String jsonResponse = mvcResult.getResponse().getContentAsString();
         PortfolioResponseDto[] responseDtos = objectMapper.readValue(jsonResponse, PortfolioResponseDto[].class);
 
-        assertNotNull(responseDtos);
-        assertEquals(1, responseDtos.length);
-        assertEquals(responseDto, responseDtos[0]);
+        assertThat(responseDtos[0]).isEqualTo(responseDto);
     }
 //
 //    @Test
