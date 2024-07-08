@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -30,6 +31,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     @Autowired
     private AppUserService appUserService;
 
+
     @AfterEach
     public void tearDown() {
         portfolioRepository.deleteAll();
@@ -45,6 +47,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
                 "testuser_" + UUID.randomUUID() + "@example.com",
                 null
         ));
+
         PortfolioResponseDto responseDto = portfolioService.create(new PortfolioDto(
                 new BigDecimal("2.50"),
                 "BTC",
@@ -60,22 +63,40 @@ public class PortfolioControllerIntTest extends BaseIntTest {
                 .getContentAsString();
 
         // then
-        PortfolioResponseDto[] responseDtos = objectMapper.readValue(jsonResponse, PortfolioResponseDto[].class);
+        PortfolioResponseDto[] result = objectMapper.readValue(jsonResponse, PortfolioResponseDto[].class);
 
-        assertThat(responseDtos[0]).isEqualTo(responseDto);
+        assertThat(result[0]).isEqualTo(responseDto);
     }
-//
-//    @Test
-//    public void FindById_ReturnsResponseDto() throws Exception {
-//        mockMvc.perform(get("/api/portfolios/{id}", portfolio.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.amount").value(portfolio.getAmount()))
-//                .andExpect(jsonPath("$.currency").value(portfolio.getCurrency()))
-//                .andExpect(jsonPath("$.dateOfPurchase").value(portfolio.getDateOfPurchase()
-//                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))))
-//                .andExpect(jsonPath("$.appUserId").value(portfolio.getAppUser().getId()))
-//                .andExpect(jsonPath("$.amountEur").isNotEmpty());
-//    }
+
+    @Test
+    public void FindById_ReturnsResponseDto() throws Exception {
+        // HUINJA
+        // given
+        AppUser appUser = appUserService.create(new AppUser(
+                null,
+                "testuser",
+                "testuser_" + UUID.randomUUID() + "@example.com",
+                null
+        ));
+
+        PortfolioResponseDto responseDto = portfolioService.create(new PortfolioDto(
+                new BigDecimal("2.50"),
+                "BTC",
+                LocalDateTime.now().minusDays(1),
+                appUser.getId()
+        ));
+
+        Field idField = PortfolioResponseDto.class.getDeclaredField("id");
+        idField.setAccessible(true);
+        Integer id = (Integer) idField.get(responseDto);
+
+        // when
+        mockMvc.perform(get("/api/portfolios/{id}", id))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
 //
 //    @Test
 //    public void Create_SavesPortfolioAndReturnsResponseDto() throws Exception {

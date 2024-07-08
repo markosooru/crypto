@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/appusers")
+@RequestMapping("api/appuser")
 @AllArgsConstructor
 public class AppUserController {
 
