@@ -63,6 +63,7 @@ class PortfolioServiceTest {
         );
 
         PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                1,
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
@@ -102,6 +103,7 @@ class PortfolioServiceTest {
         );
 
         PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                1,
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
@@ -140,6 +142,7 @@ class PortfolioServiceTest {
         );
 
         PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                1,
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
@@ -194,6 +197,7 @@ class PortfolioServiceTest {
         );
 
         PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+                1,
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),

@@ -14,6 +14,7 @@ public class PortfolioMapper {
 
     public PortfolioResponseDto toResponseDto(Portfolio portfolio, BigDecimal amountEur) {
         return new PortfolioResponseDto(
+                portfolio.getId(),
                 portfolio.getAmount(),
                 portfolio.getCurrency(),
                 portfolio.getDateOfPurchase(),

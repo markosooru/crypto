@@ -26,6 +26,7 @@ public class AppUserService {
     }
 
     public AppUser update(Integer id, AppUser user) {
+        // TODO: Creates a new user, instead of updating the existing one
         appUserRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         return appUserRepository.save(user);

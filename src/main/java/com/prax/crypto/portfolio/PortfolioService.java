@@ -69,6 +69,7 @@ public class PortfolioService {
         BigDecimal amountEur = currentPriceInEUR.multiply(item.amount());
 
         var updatedItem = portfolioMapper.toEntity(item);
+        updatedItem.setId(id);
         var savedItem = portfolioRepository.save(updatedItem);
         return portfolioMapper.toResponseDto(savedItem, amountEur);
     }
