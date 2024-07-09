@@ -43,7 +43,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
-    public void Create_SavesPortfolioAndReturnsResponseDto() throws Exception {
+    public void create_givenPortfolioDto_savesAndReturnsResponseDto() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
                 null,
@@ -78,7 +78,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
-    public void FindAll_ReturnsListOfActiveResponseDtos() throws Exception {
+    public void findAll_executes_returnsListOfActiveResponseDtos() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
                 null,
@@ -108,7 +108,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
-    public void FindById_ReturnsResponseDto() throws Exception {
+    public void findById_givenId_returnsResponseDto() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
                 null,
@@ -138,7 +138,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
-    public void Update_SavesPortfolioAndReturnsResponseDto() throws Exception {
+    public void update_givenIdAndPortfolioDto_savesAndReturnsResponseDto() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
                 null,
@@ -180,7 +180,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
-    public void Delete_SetsPortfolioAsDeleted() throws Exception {
+    public void delete_givenId_setsPortfolioDeletedFlagTrue() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
                 null,

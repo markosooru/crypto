@@ -41,7 +41,7 @@ class PortfolioServiceTest {
     private ArgumentCaptor<Portfolio> portfolioCaptor;
 
     @Test
-    void Create_SavesPortfolioAndReturnsResponseDto() {
+    void create_givenPortfolioDto_savesAndReturnsResponseDto() {
         // given
         AppUser appUser = AppUser.builder().id(1).build();
         Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
@@ -88,7 +88,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void FindAll_ReturnsListOfPortfolios() {
+    void findAll_executes_returnsListOfActivePortfolioDtos() {
         // given
         AppUser appUser = AppUser.builder().id(1).build();
         Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
@@ -127,7 +127,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void FindById_ReturnsResponseDto() {
+    void findById_givenId_returnsCorrespondingResponseDtoIfActive() {
         // given
         AppUser appUser = AppUser.builder().id(1).build();
         Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
@@ -165,7 +165,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void FindById_ThrowsEntityNotFoundExceptionWhenIdNotFound() {
+    void findById_givenWrongId_throwsEntityNotFoundException() {
         // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.empty());
 
@@ -175,7 +175,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void Update_SavesPortfolioAndReturnsResponseDto() {
+    void update_givenIdAndPortfolioDto_savesAndReturnsResponseDto() {
         // given
         AppUser appUser = AppUser.builder().id(1).build();
         Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
@@ -224,7 +224,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void Update_ThrowsEntityNotFoundExceptionWhenIdNotFound() {
+    void update_givenWrongId_throwsEntityNotFoundException() {
         // given
         PortfolioDto portfolioDto = new PortfolioDto(
                 new BigDecimal("2.0"),
@@ -242,7 +242,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void Delete_SetsDeletedFlagToTrue() {
+    void delete_givenId_setsDeletedFlagToTrue() {
         // given
         AppUser appUser = AppUser.builder().id(1).build();
 
@@ -268,7 +268,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void Delete_ThrowsEntityNotFoundExceptionWhenIdNotFound() {
+    void delete_givenWrongId_throwsEntityNotFoundException() {
         // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.empty());
 

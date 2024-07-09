@@ -26,7 +26,7 @@ class PortfolioMapperTest {
     private AppUserRepository appUserRepository;
 
     @Test
-    void ToResponseDto_MapsEntityToResponseDto() {
+    void toResponseDto_givenPortfolioEntity_mapsEntityToResponseDto() {
         // given
         Portfolio portfolio = new Portfolio(
                 1,
@@ -50,7 +50,7 @@ class PortfolioMapperTest {
     }
 
     @Test
-    void ToEntity_MapsDtoToEntity() {
+    void toEntity_givenPortfolioDto_mapsDtoToEntity() {
         // given
         PortfolioDto portfolioDto = new PortfolioDto(
                 new BigDecimal("1.1234"),

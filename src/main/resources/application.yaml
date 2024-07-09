@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      name: user
+      password: appPass
   datasource:
     url: jdbc:postgresql://localhost:5432/crypto
     username: postgres

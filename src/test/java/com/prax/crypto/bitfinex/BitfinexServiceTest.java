@@ -34,7 +34,7 @@ class BitfinexServiceTest {
     private RestClient.ResponseSpec responseSpec;
 
     @Test
-    void GetTicker_RetrievesDataAndMapsToTicker() {
+    void getTicker_givenCryptoCurrency_retrievesDataAndMapsToTickerEntity() {
         // given
         String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
         BigDecimal[] tickerData = {
@@ -74,7 +74,7 @@ class BitfinexServiceTest {
     }
 
     @Test
-    void GetTicker_InvalidResponseThrowsRestClientException() {
+    void getTicker_nullOrNot10LongResponseFromApi_throwsRestClientException() {
         // given
         BigDecimal[] invalidTickerData = {new BigDecimal("10000.0")};
         String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
@@ -90,7 +90,7 @@ class BitfinexServiceTest {
     }
 
     @Test
-    void GetTicker_ApiFailureThrowsRestClientException() {
+    void getTicker_bitfinexApiFailure_throwsRestClientException() {
         // given
         String TICKER_URL = "https://api.bitfinex.com/v2/ticker/yBTCEUR";
 
