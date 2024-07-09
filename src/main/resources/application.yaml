@@ -24,3 +24,5 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+bitfinex:
+    ticker-url: https://api.bitfinex.com/v2/ticker/

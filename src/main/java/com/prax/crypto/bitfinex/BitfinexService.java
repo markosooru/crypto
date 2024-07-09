@@ -1,6 +1,6 @@
 package com.prax.crypto.bitfinex;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -8,19 +8,23 @@ import org.springframework.web.client.RestClientException;
 import java.math.BigDecimal;
 
 @Service
-@AllArgsConstructor
 public class BitfinexService {
 
     private final RestClient restClient;
 
-    private static final String TICKER_URL = "https://api.bitfinex.com/v2/ticker/";
+    @Value("${bitfinex.ticker-url}")
+    private String tickerUrl;
+
+    public BitfinexService(RestClient restClient) {
+        this.restClient = restClient;
+    }
 
     public Ticker getTicker(String cryptoCurrency) {
         var symbol = "t" + cryptoCurrency + "EUR";
 
         try {
             BigDecimal[] tickerData = restClient.get()
-                    .uri(TICKER_URL + symbol)
+                    .uri(tickerUrl + symbol)
                     .retrieve()
                     .body(BigDecimal[].class);
 
