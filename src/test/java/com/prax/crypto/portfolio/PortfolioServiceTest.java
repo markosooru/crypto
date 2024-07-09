@@ -45,10 +45,10 @@ class PortfolioServiceTest {
     @Test
     void create_givenPortfolioDto_savesAndReturnsResponseDto() {
         // given
-        AppUser appUser = AppUser.builder().id(1).build();
-        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+        var appUser = AppUser.builder().id(1).build();
+        var ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
 
-        Portfolio portfolio = new Portfolio(
+        var portfolio = new Portfolio(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -57,14 +57,14 @@ class PortfolioServiceTest {
                 appUser
         );
 
-        PortfolioDto portfolioDto = new PortfolioDto(
+        var portfolioDto = new PortfolioDto(
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
                 1
         );
 
-        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+        var portfolioResponseDto = new PortfolioResponseDto(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -81,7 +81,7 @@ class PortfolioServiceTest {
                 .thenReturn(portfolioResponseDto);
 
         // when
-        PortfolioResponseDto result = portfolioService.create(portfolioDto);
+        var result = portfolioService.create(portfolioDto);
 
         // then
         assertEquals(portfolioResponseDto, result);
@@ -92,10 +92,10 @@ class PortfolioServiceTest {
     @Test
     void findAll_executes_returnsListOfActivePortfolioDtos() {
         // given
-        AppUser appUser = AppUser.builder().id(1).build();
-        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+        var appUser = AppUser.builder().id(1).build();
+        var ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
 
-        Portfolio portfolio = new Portfolio(
+        var portfolio = new Portfolio(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -104,7 +104,7 @@ class PortfolioServiceTest {
                 appUser
         );
 
-        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+        var portfolioResponseDto = new PortfolioResponseDto(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -120,7 +120,7 @@ class PortfolioServiceTest {
                 .thenReturn(portfolioResponseDto);
 
         // when
-        List<PortfolioResponseDto> result = portfolioService.findAll();
+        var result = portfolioService.findAll();
 
         // then
         assertEquals(1, result.size());
@@ -131,10 +131,10 @@ class PortfolioServiceTest {
     @Test
     void findById_givenId_returnsCorrespondingResponseDtoIfActive() {
         // given
-        AppUser appUser = AppUser.builder().id(1).build();
-        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+        var appUser = AppUser.builder().id(1).build();
+        var ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
 
-        Portfolio portfolio = new Portfolio(
+        var portfolio = new Portfolio(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -143,7 +143,7 @@ class PortfolioServiceTest {
                 appUser
         );
 
-        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+        var portfolioResponseDto = new PortfolioResponseDto(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -159,7 +159,7 @@ class PortfolioServiceTest {
                 .thenReturn(portfolioResponseDto);
 
         // when
-        PortfolioResponseDto result = portfolioService.findById(1);
+        var result = portfolioService.findById(1);
 
         // then
         assertEquals(portfolioResponseDto, result);
@@ -179,10 +179,10 @@ class PortfolioServiceTest {
     @Test
     void update_givenIdAndPortfolioDto_savesAndReturnsResponseDto() {
         // given
-        AppUser appUser = AppUser.builder().id(1).build();
-        Ticker ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
+        var appUser = AppUser.builder().id(1).build();
+        var ticker = Ticker.builder().lastPrice(new BigDecimal("30000.0")).build();
 
-        Portfolio portfolio = new Portfolio(
+        var portfolio = new Portfolio(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -191,14 +191,14 @@ class PortfolioServiceTest {
                 appUser
         );
 
-        PortfolioDto portfolioDto = new PortfolioDto(
+        var portfolioDto = new PortfolioDto(
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
                 1
         );
 
-        PortfolioResponseDto portfolioResponseDto = new PortfolioResponseDto(
+        var portfolioResponseDto = new PortfolioResponseDto(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",
@@ -216,7 +216,7 @@ class PortfolioServiceTest {
                 .thenReturn(portfolioResponseDto);
 
         // when
-        PortfolioResponseDto result = portfolioService.update(1, portfolioDto);
+        var result = portfolioService.update(1, portfolioDto);
 
         // then
         assertEquals(portfolioResponseDto, result);
@@ -228,7 +228,7 @@ class PortfolioServiceTest {
     @Test
     void update_givenWrongId_throwsEntityNotFoundException() {
         // given
-        PortfolioDto portfolioDto = new PortfolioDto(
+        var portfolioDto = new PortfolioDto(
                 new BigDecimal("2.0"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
@@ -246,9 +246,9 @@ class PortfolioServiceTest {
     @Test
     void delete_givenId_setsDeletedFlagToTrue() {
         // given
-        AppUser appUser = AppUser.builder().id(1).build();
+        var appUser = AppUser.builder().id(1).build();
 
-        Portfolio portfolio = new Portfolio(
+        var portfolio = new Portfolio(
                 1,
                 new BigDecimal("2.0"),
                 "BTC",

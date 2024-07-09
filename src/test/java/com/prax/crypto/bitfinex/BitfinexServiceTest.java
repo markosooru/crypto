@@ -35,9 +35,10 @@ class BitfinexServiceTest {
 
     @Test
     void getTicker_givenCryptoCurrency_retrievesDataAndMapsToTickerEntity() {
+        // TODO: tickerUrl not working
         // given
-        String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
-        BigDecimal[] tickerData = {
+        var TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
+        var tickerData = new BigDecimal[] {
                 new BigDecimal("10000.0"), // bid
                 new BigDecimal("10.0"),    // bidSize
                 new BigDecimal("10050.0"), // ask
@@ -57,7 +58,7 @@ class BitfinexServiceTest {
         when(responseSpec.body(BigDecimal[].class)).thenReturn(tickerData);
 
         // when
-        Ticker ticker = bitfinexService.getTicker("BTC");
+        var ticker = bitfinexService.getTicker("BTC");
 
         // then
         assertNotNull(ticker);
@@ -76,8 +77,8 @@ class BitfinexServiceTest {
     @Test
     void getTicker_nullOrNot10LongResponseFromApi_throwsRestClientException() {
         // given
-        BigDecimal[] invalidTickerData = {new BigDecimal("10000.0")};
-        String TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
+        var invalidTickerData = new BigDecimal[] {new BigDecimal("10000.0")};
+        var TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
 
         // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
@@ -92,7 +93,7 @@ class BitfinexServiceTest {
     @Test
     void getTicker_bitfinexApiFailure_throwsRestClientException() {
         // given
-        String TICKER_URL = "https://api.bitfinex.com/v2/ticker/yBTCEUR";
+        var TICKER_URL = "https://api.bitfinex.com/v2/ticker/yBTCEUR";
 
         // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
