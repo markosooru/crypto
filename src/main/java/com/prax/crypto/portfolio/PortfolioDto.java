@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 public record PortfolioDto(
         @NotNull
+        @Positive
         BigDecimal amount,
         @NotNull
-        @Positive
         String currency,
         @NotNull
         @PastOrPresent

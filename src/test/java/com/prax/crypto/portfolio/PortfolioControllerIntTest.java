@@ -1,10 +1,9 @@
 package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUser;
-import com.prax.crypto.account.AppUserRepository;
 import com.prax.crypto.account.AppUserService;
 import com.prax.crypto.base.BaseIntTest;
-import org.junit.jupiter.api.AfterEach;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,9 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PortfolioControllerIntTest extends BaseIntTest {
 
     @Autowired
-    private AppUserRepository appUserRepository;
-
-    @Autowired
     private PortfolioRepository portfolioRepository;
 
     @Autowired
@@ -35,14 +31,8 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     @Autowired
     private AppUserService appUserService;
 
-
-    @AfterEach
-    public void tearDown() {
-        portfolioRepository.deleteAll();
-        appUserRepository.deleteAll();
-    }
-
     @Test
+    @Transactional
     public void create_givenPortfolioDto_savesAndReturnsResponseDto() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
@@ -78,6 +68,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
+    @Transactional
     public void findAll_executes_returnsListOfActiveResponseDtos() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
@@ -108,6 +99,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
+    @Transactional
     public void findById_givenId_returnsResponseDto() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
@@ -138,6 +130,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
+    @Transactional
     public void update_givenIdAndPortfolioDto_savesAndReturnsResponseDto() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(
@@ -180,6 +173,7 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     }
 
     @Test
+    @Transactional
     public void delete_givenId_setsPortfolioDeletedFlagTrue() throws Exception {
         // given
         AppUser appUser = appUserService.create(new AppUser(

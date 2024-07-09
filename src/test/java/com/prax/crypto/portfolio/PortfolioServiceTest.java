@@ -32,8 +32,10 @@ class PortfolioServiceTest {
 
     @Mock
     private PortfolioRepository portfolioRepository;
+
     @Mock
     private PortfolioMapper portfolioMapper;
+
     @Mock
     private BitfinexService bitfinexService;
 

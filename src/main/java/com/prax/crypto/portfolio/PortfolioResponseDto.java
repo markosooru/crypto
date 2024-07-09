@@ -8,11 +8,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record PortfolioResponseDto(
+        @NotNull
         Integer id,
         @NotNull
+        @Positive
         BigDecimal amount,
         @NotNull
-        @Positive
         String currency,
         @NotNull
         @PastOrPresent
