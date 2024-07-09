@@ -1,0 +1,1 @@
+create index idx_portfolio_id_isDeleted on Portfolio(id, is_deleted);
