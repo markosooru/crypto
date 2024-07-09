@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +19,10 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioResponseDto create(PortfolioDto item) {
-        BigDecimal currentPriceInEUR = bitfinexService
+        var currentPriceInEUR = bitfinexService
                 .getTicker(item.currency())
                 .lastPrice();
-        BigDecimal amountEur = currentPriceInEUR.multiply(item.amount());
+        var amountEur = currentPriceInEUR.multiply(item.amount());
 
         var portfolioItem = portfolioMapper.toEntity(item);
         var savedPortfolioItem = portfolioRepository.save(portfolioItem);
@@ -35,10 +34,10 @@ public class PortfolioService {
         return portfolioRepository.findAllActive()
                 .stream()
                 .map(portfolio -> {
-                    BigDecimal currentPriceInEUR = bitfinexService
+                    var currentPriceInEUR = bitfinexService
                             .getTicker(portfolio.getCurrency())
                             .lastPrice();
-                    BigDecimal amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
+                    var amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
                     return portfolioMapper.toResponseDto(portfolio, amountEur);
                 })
                 .collect(Collectors.toList());
@@ -48,10 +47,10 @@ public class PortfolioService {
     public PortfolioResponseDto findById(Integer id) {
         return portfolioRepository.findActiveById(id)
                 .map(portfolio -> {
-                    BigDecimal currentPriceInEUR = bitfinexService
+                    var currentPriceInEUR = bitfinexService
                             .getTicker(portfolio.getCurrency())
                             .lastPrice();
-                    BigDecimal amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
+                    var amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
                     return portfolioMapper.toResponseDto(portfolio, amountEur);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
@@ -63,10 +62,10 @@ public class PortfolioService {
                 .findActiveById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
 
-        BigDecimal currentPriceInEUR = bitfinexService
+        var currentPriceInEUR = bitfinexService
                 .getTicker(item.currency())
                 .lastPrice();
-        BigDecimal amountEur = currentPriceInEUR.multiply(item.amount());
+        var amountEur = currentPriceInEUR.multiply(item.amount());
 
         var updatedItem = portfolioMapper.toEntity(item);
         updatedItem.setId(id);
