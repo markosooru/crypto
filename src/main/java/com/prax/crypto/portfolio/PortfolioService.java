@@ -2,6 +2,7 @@ package com.prax.crypto.portfolio;
 
 import com.prax.crypto.bitfinex.BitfinexService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ public class PortfolioService {
     private final BitfinexService bitfinexService;
 
     @Transactional
-    public PortfolioResponseDto create(PortfolioDto item) {
+    public PortfolioResponseDto create(@Valid PortfolioDto item) {
         var currentPriceInEUR = bitfinexService
                 .getTicker(item.currency())
                 .lastPrice();
@@ -59,7 +60,7 @@ public class PortfolioService {
     }
 
     @Transactional
-    public PortfolioResponseDto update(Integer id, PortfolioDto item) {
+    public PortfolioResponseDto update(Integer id, @Valid PortfolioDto item) {
         portfolioRepository
                 .findActiveById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));

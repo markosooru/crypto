@@ -32,7 +32,7 @@ class PortfolioMapperTest {
                 1,
                 new BigDecimal("1.1234"),
                 "BTC",
-                LocalDateTime.of(2023, 6, 28, 14, 30, 0),
+                LocalDateTime.now().minusDays(1),
                 false,
                 new AppUser()
         );
@@ -55,7 +55,7 @@ class PortfolioMapperTest {
         var portfolioDto = new PortfolioDto(
                 new BigDecimal("1.1234"),
                 "BTC",
-                LocalDateTime.of(2023, 6, 28, 14, 30, 0),
+                LocalDateTime.now().minusDays(1),
                 1
         );
         var appUser = AppUser.builder().id(1).build();
