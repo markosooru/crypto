@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
@@ -33,11 +34,13 @@ class BitfinexServiceTest {
     @Mock
     private RestClient.ResponseSpec responseSpec;
 
+    @Value("${bitfinex.ticker-url}")
+    private String tickerUrl;
+
     @Test
     void getTicker_givenCryptoCurrency_retrievesDataAndMapsToTickerEntity() {
-        // TODO: tickerUrl not working
         // given
-        var TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
+        var fullTickerUrl = tickerUrl + "tBTCEUR";
         var tickerData = new BigDecimal[] {
                 new BigDecimal("10000.0"), // bid
                 new BigDecimal("10.0"),    // bidSize
@@ -53,7 +56,7 @@ class BitfinexServiceTest {
 
         // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(TICKER_URL)).thenAnswer(invocation -> requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(fullTickerUrl)).thenAnswer(invocation -> requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenAnswer(invocation -> responseSpec);
         when(responseSpec.body(BigDecimal[].class)).thenReturn(tickerData);
 
@@ -77,12 +80,12 @@ class BitfinexServiceTest {
     @Test
     void getTicker_nullOrNot10LongResponseFromApi_throwsRestClientException() {
         // given
+        var fullTickerUrl = tickerUrl + "tBTCEUR";
         var invalidTickerData = new BigDecimal[] {new BigDecimal("10000.0")};
-        var TICKER_URL = "https://api.bitfinex.com/v2/ticker/tBTCEUR";
 
         // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(TICKER_URL)).thenAnswer(invocation -> requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(fullTickerUrl)).thenAnswer(invocation -> requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenAnswer(invocation -> responseSpec);
         when(responseSpec.body(BigDecimal[].class)).thenReturn(invalidTickerData);
 
@@ -93,11 +96,11 @@ class BitfinexServiceTest {
     @Test
     void getTicker_bitfinexApiFailure_throwsRestClientException() {
         // given
-        var TICKER_URL = "https://api.bitfinex.com/v2/ticker/yBTCEUR";
+        var fullTickerUrl = tickerUrl + "tBTCEUR";
 
         // mock
         when(restClient.get()).thenAnswer(invocation -> requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(TICKER_URL)).thenAnswer(invocation -> requestHeadersSpec);
+        when(requestHeadersUriSpec.uri(fullTickerUrl)).thenAnswer(invocation -> requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenAnswer(invocation -> responseSpec);
         when(responseSpec.body(BigDecimal[].class)).thenThrow(new RestClientException("API failure"));
 
