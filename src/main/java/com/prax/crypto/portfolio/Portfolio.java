@@ -35,7 +35,7 @@ public class Portfolio {
     @NotEmpty
     private String currency;
     @NotNull
-    @PastOrPresent(message = "Date of purchase must be in the past or present")
+    @PastOrPresent
     private LocalDateTime dateOfPurchase;
 
     @Builder.Default
