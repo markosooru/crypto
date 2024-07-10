@@ -1,5 +1,6 @@
 package com.prax.crypto.portfolio;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,7 +23,7 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
     @PostMapping
-    public PortfolioResponseDto create(@RequestBody PortfolioDto item) {
+    public PortfolioResponseDto create(@RequestBody @Valid PortfolioDto item) {
         return portfolioService.create(item);
     }
 
@@ -37,7 +38,7 @@ public class PortfolioController {
     }
 
     @PutMapping("/{id}")
-    public PortfolioResponseDto update(@PathVariable Integer id, @RequestBody PortfolioDto item) {
+    public PortfolioResponseDto update(@PathVariable Integer id, @RequestBody @Valid PortfolioDto item) {
         return portfolioService.update(id, item);
     }
 
