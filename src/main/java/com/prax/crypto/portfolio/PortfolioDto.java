@@ -16,8 +16,6 @@ public record PortfolioDto(
         String currency,
         @NotNull
         @PastOrPresent
-        LocalDateTime dateOfPurchase,
-        @NotNull
-        Integer appUserId
+        LocalDateTime dateOfPurchase
 ) {
 }

@@ -34,12 +34,16 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioResponseDto create(@Valid PortfolioDto item) {
+        var currentUser = getCurrentUser();
         var amountEur = bitfinexService
                 .getCryptoFxInEur(item.currency())
                 .multiply(item.amount());
 
         var portfolioItem = portfolioMapper.toEntity(item);
-        var savedPortfolioItem = portfolioRepository.save(portfolioItem);
+        portfolioItem.setAppUser(currentUser);
+
+        var savedPortfolioItem = portfolioRepository
+                .save(portfolioItem);
         return portfolioMapper.toResponseDto(savedPortfolioItem, amountEur);
     }
 
@@ -88,6 +92,8 @@ public class PortfolioService {
 
         var updatedItem = portfolioMapper.toEntity(item);
         updatedItem.setId(id);
+        updatedItem.setAppUser(currentUser);
+
         var savedItem = portfolioRepository.save(updatedItem);
         return portfolioMapper.toResponseDto(savedItem, amountEur);
     }

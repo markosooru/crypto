@@ -27,14 +27,10 @@ public class PortfolioMapper {
     }
 
     public Portfolio toEntity(@Valid PortfolioDto portfolioDto) {
-        var existingUser = appUserRepository.findById(portfolioDto.appUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
         return Portfolio.builder()
                 .amount(portfolioDto.amount())
                 .currency(portfolioDto.currency())
                 .dateOfPurchase(portfolioDto.dateOfPurchase())
-                .appUser(existingUser)
                 .build();
     }
 }
