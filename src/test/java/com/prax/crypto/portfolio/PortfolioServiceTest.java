@@ -74,7 +74,7 @@ class PortfolioServiceTest {
         );
 
         // mock
-        when(bitfinexService.getTicker(portfolioDto.currency())).thenReturn(ticker);
+        when(bitfinexService.getCryptoFxInEur(portfolioDto.currency())).thenReturn(ticker);
         when(portfolioMapper.toEntity(portfolioDto)).thenReturn(portfolio);
         when(portfolioRepository.save(portfolio)).thenReturn(portfolio);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
@@ -115,7 +115,7 @@ class PortfolioServiceTest {
 
         // mock
         when(portfolioRepository.findAllActive()).thenReturn(List.of(portfolio));
-        when(bitfinexService.getTicker(portfolio.getCurrency())).thenReturn(ticker);
+        when(bitfinexService.getCryptoFxInEur(portfolio.getCurrency())).thenReturn(ticker);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
                 .thenReturn(portfolioResponseDto);
 
@@ -154,7 +154,7 @@ class PortfolioServiceTest {
 
         // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.of(portfolio));
-        when(bitfinexService.getTicker(portfolio.getCurrency())).thenReturn(ticker);
+        when(bitfinexService.getCryptoFxInEur(portfolio.getCurrency())).thenReturn(ticker);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))
                 .thenReturn(portfolioResponseDto);
 
@@ -209,7 +209,7 @@ class PortfolioServiceTest {
 
         // mock
         when(portfolioRepository.findActiveById(1)).thenReturn(Optional.of(portfolio));
-        when(bitfinexService.getTicker(portfolioDto.currency())).thenReturn(ticker);
+        when(bitfinexService.getCryptoFxInEur(portfolioDto.currency())).thenReturn(ticker);
         when(portfolioMapper.toEntity(portfolioDto)).thenReturn(portfolio);
         when(portfolioRepository.save(portfolio)).thenReturn(portfolio);
         when(portfolioMapper.toResponseDto(any(Portfolio.class), any(BigDecimal.class)))

@@ -34,8 +34,9 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioResponseDto create(@Valid PortfolioDto item) {
-        var currentPriceInEUR = bitfinexService.getTicker(item.currency()).lastPrice();
-        var amountEur = currentPriceInEUR.multiply(item.amount());
+        var amountEur = bitfinexService
+                .getCryptoFxInEur(item.currency())
+                .multiply(item.amount());
 
         var portfolioItem = portfolioMapper.toEntity(item);
         var savedPortfolioItem = portfolioRepository.save(portfolioItem);
@@ -50,8 +51,9 @@ public class PortfolioService {
                 .stream()
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))
                 .map(portfolio -> {
-                    var currentPriceInEUR = bitfinexService.getTicker(portfolio.getCurrency()).lastPrice();
-                    var amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
+                    var amountEur = bitfinexService
+                            .getCryptoFxInEur(portfolio.getCurrency())
+                            .multiply(portfolio.getAmount());
                     return portfolioMapper.toResponseDto(portfolio, amountEur);
                 })
                 .collect(Collectors.toList());
@@ -64,8 +66,9 @@ public class PortfolioService {
         return portfolioRepository.findActiveById(id)
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))
                 .map(portfolio -> {
-                    var currentPriceInEUR = bitfinexService.getTicker(portfolio.getCurrency()).lastPrice();
-                    var amountEur = currentPriceInEUR.multiply(portfolio.getAmount());
+                    var amountEur = bitfinexService
+                            .getCryptoFxInEur(portfolio.getCurrency())
+                            .multiply(portfolio.getAmount());
                     return portfolioMapper.toResponseDto(portfolio, amountEur);
                 })
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
@@ -79,8 +82,9 @@ public class PortfolioService {
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
 
-        var currentPriceInEUR = bitfinexService.getTicker(item.currency()).lastPrice();
-        var amountEur = currentPriceInEUR.multiply(item.amount());
+        var amountEur = bitfinexService
+                .getCryptoFxInEur(item.currency())
+                .multiply(item.amount());
 
         var updatedItem = portfolioMapper.toEntity(item);
         updatedItem.setId(id);
@@ -91,7 +95,7 @@ public class PortfolioService {
     public void delete(Integer id) {
         var currentUser = getCurrentUser();
 
-        Portfolio item = portfolioRepository.findActiveById(id)
+        var item = portfolioRepository.findActiveById(id)
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))
                 .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
 

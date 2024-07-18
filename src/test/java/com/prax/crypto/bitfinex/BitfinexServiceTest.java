@@ -38,7 +38,7 @@ class BitfinexServiceTest {
     private String tickerUrl;
 
     @Test
-    void getTicker_givenCryptoCurrency_retrievesDataAndMapsToTickerEntity() {
+    void getTicker_givenCryptoCurrency_retrievesDataAndMapsToCryptoFxInEurEntity() {
         // given
         var fullTickerUrl = tickerUrl + "tBTCEUR";
         var tickerData = new BigDecimal[] {
@@ -61,7 +61,7 @@ class BitfinexServiceTest {
         when(responseSpec.body(BigDecimal[].class)).thenReturn(tickerData);
 
         // when
-        var ticker = bitfinexService.getTicker("BTC");
+        var ticker = bitfinexService.getCryptoFxInEur("BTC");
 
         // then
         assertNotNull(ticker);
@@ -78,7 +78,7 @@ class BitfinexServiceTest {
     }
 
     @Test
-    void getTicker_nullOrNot10LongResponseFromApi_throwsRestClientException() {
+    void getCryptoFxInEur_nullOrNot10LongResponseFromApi_throwsRestClientException() {
         // given
         var fullTickerUrl = tickerUrl + "tBTCEUR";
         var invalidTickerData = new BigDecimal[] {new BigDecimal("10000.0")};
@@ -90,11 +90,11 @@ class BitfinexServiceTest {
         when(responseSpec.body(BigDecimal[].class)).thenReturn(invalidTickerData);
 
         // when & then
-        assertThrows(RuntimeException.class, () -> bitfinexService.getTicker("BTC"));
+        assertThrows(RuntimeException.class, () -> bitfinexService.getCryptoFxInEur("BTC"));
     }
 
     @Test
-    void getTicker_bitfinexApiFailure_throwsRestClientException() {
+    void getCryptoFxInEur_bitfinexApiFailure_throwsRestClientException() {
         // given
         var fullTickerUrl = tickerUrl + "tBTCEUR";
 
@@ -105,6 +105,6 @@ class BitfinexServiceTest {
         when(responseSpec.body(BigDecimal[].class)).thenThrow(new RestClientException("API failure"));
 
         // when & then
-        assertThrows(RuntimeException.class, () -> bitfinexService.getTicker("BTC"));
+        assertThrows(RuntimeException.class, () -> bitfinexService.getCryptoFxInEur("BTC"));
     }
 }

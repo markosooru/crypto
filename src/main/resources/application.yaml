@@ -24,4 +24,4 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 bitfinex:
-    ticker-url: https://api.bitfinex.com/v2/ticker/
+    fx-url: https://api-pub.bitfinex.com/v2/calc/fx/
