@@ -1,13 +1,13 @@
 package com.prax.crypto.account;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;

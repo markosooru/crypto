@@ -2,7 +2,7 @@ package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUserRepository;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Service
 @Validated
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PortfolioMapper {
 
     private final AppUserRepository appUserRepository;

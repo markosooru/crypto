@@ -5,7 +5,7 @@ import com.prax.crypto.account.AppUserRepository;
 import com.prax.crypto.bitfinex.BitfinexService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Validated
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
