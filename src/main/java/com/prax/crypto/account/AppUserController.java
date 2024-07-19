@@ -1,7 +1,9 @@
 package com.prax.crypto.account;
 
+import com.prax.crypto.security.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,12 @@ import java.util.List;
 public class AppUserController {
 
     private final AppUserService appUserService;
+    private final TokenService tokenService;
+
+    @PostMapping("/login")
+    public String token(Authentication authentication) {
+        return tokenService.generateToken(authentication);
+    }
 
     @PostMapping
     public AppUser create(@RequestBody AppUser user) {
