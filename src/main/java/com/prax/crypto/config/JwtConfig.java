@@ -33,9 +33,9 @@ public class JwtConfig {
 
     private RSAPublicKey getPublicKey() {
         try {
-            byte[] keyBytes = Base64.getDecoder().decode(publicKey);
-            X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            var keyBytes = Base64.getDecoder().decode(publicKey);
+            var spec = new X509EncodedKeySpec(keyBytes);
+            var keyFactory = KeyFactory.getInstance("RSA");
             return (RSAPublicKey) keyFactory.generatePublic(spec);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to decode public key", e);
@@ -44,9 +44,9 @@ public class JwtConfig {
 
     private RSAPrivateKey getPrivateKey() {
         try {
-            byte[] keyBytes = Base64.getDecoder().decode(privateKey);
-            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            var keyBytes = Base64.getDecoder().decode(privateKey);
+            var spec = new PKCS8EncodedKeySpec(keyBytes);
+            var keyFactory = KeyFactory.getInstance("RSA");
             return (RSAPrivateKey) keyFactory.generatePrivate(spec);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to decode private key", e);
