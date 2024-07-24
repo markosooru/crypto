@@ -1,6 +1,6 @@
 package com.prax.crypto.account;
 
 public enum Role {
-    USER,
-    ADMIN
+    ROLE_USER,
+    ROLE_ADMIN
 }

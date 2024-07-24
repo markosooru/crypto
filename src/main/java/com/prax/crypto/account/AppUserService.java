@@ -2,6 +2,8 @@ package com.prax.crypto.account;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,28 +13,54 @@ import java.util.List;
 public class AppUserService {
 
     private final AppUserRepository appUserRepository;
+    private final AppUserMapper appUserMapper;
 
-    public AppUser create(AppUser user) {
-        return appUserRepository.save(user);
+    public AppUserResponseDto create(AppUserDto user) {
+        var appUser = appUserMapper.toEntity(user);
+        return appUserMapper.toResponseDto(appUserRepository.save(appUser));
     }
 
-    public List<AppUser> findAll() {
-        return appUserRepository.findAll();
+    public AppUserResponseDto createWithRole(AppUserWithRoleDto user) {
+        var appUser = appUserMapper.toEntityWithRole(user);
+        return appUserMapper.toResponseDto(appUserRepository.save(appUser));
     }
 
-    public AppUser findById(Integer id) {
-        return appUserRepository.findById(id)
+    public List<AppUserResponseDto> findAll() {
+        return appUserRepository.findAll().stream()
+                .map(appUserMapper::toResponseDto)
+                .toList();
+    }
+
+    public AppUserResponseDto findById(Integer id) {
+        var appUser = appUserRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return appUserMapper.toResponseDto(appUser);
     }
 
-    public AppUser update(Integer id, AppUser user) {
-        // TODO: Creates a new user, instead of updating the existing one
-        appUserRepository.findById(id)
+    public AppUserResponseDto update(Integer id, AppUserDto user) {
+        var appUser = appUserRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return appUserRepository.save(user);
+        appUser.setEmail(user.email());
+        appUser.setPassword(user.password());
+        return appUserMapper.toResponseDto(appUserRepository.save(appUser));
     }
 
     public void delete(Integer id) {
         appUserRepository.deleteById(id);
+    }
+
+    public AppUser getAuthenticatedUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof Jwt jwt) {
+            var email = jwt.getSubject();
+            return appUserRepository.findByEmail(email)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        }
+        throw new SecurityException("User not authenticated");
+    }
+
+    public boolean hasPermission(Integer userId) {
+        var authenticatedUser = getAuthenticatedUser();
+        return authenticatedUser.getRole() == Role.ROLE_ADMIN || authenticatedUser.getId().equals(userId);
     }
 }

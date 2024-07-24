@@ -1,13 +1,10 @@
 package com.prax.crypto.portfolio;
 
-import com.prax.crypto.account.AppUser;
-import com.prax.crypto.account.AppUserRepository;
+import com.prax.crypto.account.AppUserService;
 import com.prax.crypto.bitfinex.BitfinexService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -23,24 +20,16 @@ public class PortfolioService {
     private final PortfolioRepository portfolioRepository;
     private final PortfolioMapper portfolioMapper;
     private final BitfinexService bitfinexService;
-    private final AppUserRepository appUserRepository;
-
-    private AppUser getCurrentUser() {
-        var userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        return appUserRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-    }
+    private final AppUserService appUserService;
 
     @Transactional
     public PortfolioResponseDto create(@Valid PortfolioDto item) {
-        var currentUser = getCurrentUser();
+        var currentUser = appUserService.getAuthenticatedUser();
         var amountEur = bitfinexService
                 .getCryptoFxInEur(item.currency())
                 .multiply(item.amount());
 
-        var portfolioItem = portfolioMapper.toEntity(item);
-        portfolioItem.setAppUser(currentUser);
+        var portfolioItem = portfolioMapper.toEntity(item, currentUser);
 
         var savedPortfolioItem = portfolioRepository
                 .save(portfolioItem);
@@ -49,7 +38,7 @@ public class PortfolioService {
 
     @Transactional
     public List<PortfolioResponseDto> findAll() {
-        var currentUser = getCurrentUser();
+        var currentUser = appUserService.getAuthenticatedUser();
 
         return portfolioRepository.findAllActive()
                 .stream()
@@ -65,7 +54,7 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioResponseDto findById(Integer id) {
-        var currentUser = getCurrentUser();
+        var currentUser = appUserService.getAuthenticatedUser();
 
         return portfolioRepository.findActiveById(id)
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))
@@ -80,7 +69,7 @@ public class PortfolioService {
 
     @Transactional
     public PortfolioResponseDto update(Integer id, @Valid PortfolioDto item) {
-        var currentUser = getCurrentUser();
+        var currentUser = appUserService.getAuthenticatedUser();
 
         portfolioRepository.findActiveById(id)
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))
@@ -90,16 +79,15 @@ public class PortfolioService {
                 .getCryptoFxInEur(item.currency())
                 .multiply(item.amount());
 
-        var updatedItem = portfolioMapper.toEntity(item);
+        var updatedItem = portfolioMapper.toEntity(item, currentUser);
         updatedItem.setId(id);
-        updatedItem.setAppUser(currentUser);
 
         var savedItem = portfolioRepository.save(updatedItem);
         return portfolioMapper.toResponseDto(savedItem, amountEur);
     }
 
     public void delete(Integer id) {
-        var currentUser = getCurrentUser();
+        var currentUser = appUserService.getAuthenticatedUser();
 
         var item = portfolioRepository.findActiveById(id)
                 .filter(portfolio -> portfolio.getAppUser().equals(currentUser))

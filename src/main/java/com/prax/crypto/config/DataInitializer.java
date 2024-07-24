@@ -23,7 +23,7 @@ public class DataInitializer {
                 var user = AppUser.builder()
                         .email("user@crypto.com")
                         .password(passwordEncoder.encode("appPass"))
-                        .role(Role.USER)
+                        .role(Role.ROLE_USER)
                         .build();
                 appUserRepository.save(user);
             }
@@ -31,7 +31,7 @@ public class DataInitializer {
                 var user2 = AppUser.builder()
                         .email("user2@crypto.com")
                         .password(passwordEncoder.encode("appPass"))
-                        .role(Role.USER)
+                        .role(Role.ROLE_USER)
                         .build();
                 appUserRepository.save(user2);
             }
@@ -39,7 +39,7 @@ public class DataInitializer {
                 var admin = AppUser.builder()
                         .email("admin@crypto.com")
                         .password(passwordEncoder.encode("appPass"))
-                        .role(Role.ADMIN)
+                        .role(Role.ROLE_ADMIN)
                         .build();
                 appUserRepository.save(admin);
             }
