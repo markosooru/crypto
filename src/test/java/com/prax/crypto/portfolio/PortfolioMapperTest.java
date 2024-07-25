@@ -21,6 +21,7 @@ class PortfolioMapperTest {
     @Test
     void toResponseDto_givenPortfolioEntity_mapsEntityToResponseDto() {
         // given
+        var amountEur = new BigDecimal("12345.67");
         var portfolio = new Portfolio(
                 1,
                 new BigDecimal("0.12345678"),
@@ -29,12 +30,12 @@ class PortfolioMapperTest {
                 false,
                 new AppUser()
         );
-        var amountEur = new BigDecimal("12345.67");
 
         // when
         var dto = portfolioMapper.toResponseDto(portfolio, amountEur);
 
         // then
+        assertEquals(portfolio.getId(), dto.id());
         assertEquals(portfolio.getAmount(), dto.amount());
         assertEquals(portfolio.getCurrency(), dto.currency());
         assertEquals(portfolio.getDateOfPurchase(), dto.dateOfPurchase());
@@ -45,12 +46,12 @@ class PortfolioMapperTest {
     @Test
     void toEntity_givenPortfolioDto_mapsDtoToEntity() {
         // given
+        var appUser = new AppUser();
         var portfolioDto = new PortfolioDto(
                 new BigDecimal("0.12345678"),
                 "BTC",
                 LocalDateTime.now().minusDays(1)
         );
-        var appUser = new AppUser();
 
         // when
         var result = portfolioMapper.toEntity(portfolioDto, appUser);

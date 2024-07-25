@@ -5,7 +5,7 @@ import com.prax.crypto.portfolio.Portfolio;
 import java.util.List;
 
 public record AppUserResponseDto(
-        Integer Id,
+        Integer id,
         String email,
         List<Portfolio> portfolioItems
 ) {

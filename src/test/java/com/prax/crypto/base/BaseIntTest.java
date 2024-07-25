@@ -27,6 +27,7 @@ public class BaseIntTest {
         registry.add("spring.flyway.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.flyway.user", postgreSQLContainer::getUsername);
         registry.add("spring.flyway.password", postgreSQLContainer::getPassword);
+        registry.add("spring.jpa.open-in-view", () -> "true");
     }
 
     @Autowired

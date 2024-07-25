@@ -25,6 +25,7 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PortfolioResponseDto create(@RequestBody @Valid PortfolioDto item) {
         return portfolioService.create(item);
     }

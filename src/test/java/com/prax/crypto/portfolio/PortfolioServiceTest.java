@@ -123,8 +123,6 @@ class PortfolioServiceTest {
         assertEquals(1, result.size());
         assertEquals(portfolioResponseDto, result.getFirst());
         verify(portfolioRepository).findAllActiveByAppUser(appUser);
-        verify(appUserService).getAuthenticatedUser();
-        verify(bitfinexService).getCryptoFxInEur(portfolio.getCurrency());
     }
 
     @Test
@@ -221,8 +219,6 @@ class PortfolioServiceTest {
         // then
         assertEquals(portfolioResponseDto, result);
         verify(portfolioRepository).findActiveByIdAndAppUser(1, appUser);
-        verify(appUserService).getAuthenticatedUser();
-        verify(bitfinexService).getCryptoFxInEur(portfolioDto.currency());
         verify(portfolioRepository).save(portfolio);
     }
 
@@ -230,6 +226,7 @@ class PortfolioServiceTest {
     void update_givenWrongId_throwsEntityNotFoundException() {
         // given
         var appUser = new AppUser();
+
         var portfolioDto = new PortfolioDto(
                 new BigDecimal("0.12345678"),
                 "BTC",
@@ -284,7 +281,6 @@ class PortfolioServiceTest {
 
         // when & then
         assertThrows(EntityNotFoundException.class, () -> portfolioService.delete(1));
-        verify(appUserService).getAuthenticatedUser();
         verify(portfolioRepository).findActiveByIdAndAppUser(1, appUser);
     }
 }

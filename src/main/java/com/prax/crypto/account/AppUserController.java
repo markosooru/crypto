@@ -27,12 +27,14 @@ public class AppUserController {
     private final AppUserService appUserService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AppUserResponseDto create(@RequestBody @Valid AppUserDto user) {
         return appUserService.create(user);
     }
 
     @PostMapping("/withrole")
     @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.CREATED)
     public AppUserResponseDto createWithRole(@RequestBody @Valid AppUserWithRoleDto user) {
         return appUserService.createWithRole(user);
     }
