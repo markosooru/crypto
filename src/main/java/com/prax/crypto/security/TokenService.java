@@ -20,11 +20,11 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class TokenService {
 
-    @Value("${spring.security.jwt.expiration}")
-    private int expiration;
-
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
+
+    @Value("${spring.security.jwt.expiration}")
+    private int expiration;
 
     private final Set<String> blacklistedTokens = new HashSet<>();
 

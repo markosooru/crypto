@@ -1,6 +1,8 @@
 package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUser;
+import com.prax.crypto.portfolio.dto.PortfolioDto;
+import com.prax.crypto.portfolio.dto.PortfolioResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;

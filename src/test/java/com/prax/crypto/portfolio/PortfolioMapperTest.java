@@ -2,6 +2,7 @@ package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUser;
 import com.prax.crypto.account.AppUserRepository;
+import com.prax.crypto.portfolio.dto.PortfolioDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

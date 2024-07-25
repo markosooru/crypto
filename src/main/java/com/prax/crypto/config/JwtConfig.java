@@ -23,7 +23,6 @@ public class JwtConfig {
 
     @Value("${spring.security.jwt.public-key}")
     private String publicKey;
-
     @Value("${spring.security.jwt.private-key}")
     private String privateKey;
 

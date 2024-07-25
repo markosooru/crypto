@@ -1,5 +1,7 @@
 package com.prax.crypto.portfolio;
 
+import com.prax.crypto.portfolio.dto.PortfolioDto;
+import com.prax.crypto.portfolio.dto.PortfolioResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

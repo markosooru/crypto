@@ -1,14 +1,14 @@
 package com.prax.crypto.account;
 
-import jakarta.validation.Valid;
+import com.prax.crypto.account.dto.AppUserDto;
+import com.prax.crypto.account.dto.AppUserResponseDto;
+import com.prax.crypto.account.dto.AppUserWithRoleDto;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 @Service
-@Validated
 public class AppUserMapper {
 
-    public AppUser toEntity(@Valid AppUserDto appUserDto) {
+    public AppUser toEntity(AppUserDto appUserDto) {
         return AppUser.builder()
                 .email(appUserDto.email())
                 .password(appUserDto.password())
@@ -16,7 +16,7 @@ public class AppUserMapper {
                 .build();
     }
 
-    public AppUser toEntityWithRole(@Valid AppUserWithRoleDto appUserDto) {
+    public AppUser toEntityWithRole(AppUserWithRoleDto appUserDto) {
         return AppUser.builder()
                 .email(appUserDto.email())
                 .password(appUserDto.password())
@@ -24,7 +24,7 @@ public class AppUserMapper {
                 .build();
     }
 
-    public AppUserResponseDto toResponseDto(@Valid AppUser appUser) {
+    public AppUserResponseDto toResponseDto(AppUser appUser) {
         return new AppUserResponseDto(
                 appUser.getId(),
                 appUser.getEmail(),

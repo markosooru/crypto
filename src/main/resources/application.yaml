@@ -19,14 +19,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
+    open-in-view: false
     properties:
       hibernate:
         format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
 bitfinex:
-    fx-url: https://api-pub.bitfinex.com/v2/calc/fx/
-#logging:
-#  level:
-#    org.springframework.security: DEBUG
+  fx-url: https://api-pub.bitfinex.com/v2/calc/fx/

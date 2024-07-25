@@ -1,4 +1,4 @@
-package com.prax.crypto.account;
+package com.prax.crypto.account.dto;
 
 import com.prax.crypto.portfolio.Portfolio;
 

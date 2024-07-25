@@ -1,5 +1,8 @@
 package com.prax.crypto.account;
 
+import com.prax.crypto.account.dto.AppUserDto;
+import com.prax.crypto.account.dto.AppUserResponseDto;
+import com.prax.crypto.account.dto.AppUserWithRoleDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,7 +54,8 @@ public class AppUserService {
 
     public AppUser getAuthenticatedUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof Jwt jwt) {
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getPrincipal() instanceof Jwt jwt) {
             var email = jwt.getSubject();
             return appUserRepository.findByEmail(email)
                     .orElseThrow(() -> new EntityNotFoundException("User not found"));

@@ -1,14 +1,12 @@
 package com.prax.crypto.account;
 
-import com.prax.crypto.security.TokenService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.prax.crypto.account.dto.AppUserDto;
+import com.prax.crypto.account.dto.AppUserResponseDto;
+import com.prax.crypto.account.dto.AppUserWithRoleDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
-import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,33 +25,15 @@ import java.util.List;
 public class AppUserController {
 
     private final AppUserService appUserService;
-    private final TokenService tokenService;
-    private final BearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
-
-    @PostMapping("/login")
-    public String login(Authentication authentication) {
-        return tokenService.generateToken(authentication);
-    }
-
-    @PostMapping("/logout")
-    @PreAuthorize("isAuthenticated()")
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void logout(HttpServletRequest request) {
-        var token = bearerTokenResolver.resolve(request);
-        if (token != null) {
-            tokenService.blacklistToken(token);
-        SecurityContextHolder.clearContext();
-        }
-    }
 
     @PostMapping
-    public AppUserResponseDto create(@RequestBody AppUserDto user) {
+    public AppUserResponseDto create(@RequestBody @Valid AppUserDto user) {
         return appUserService.create(user);
     }
 
     @PostMapping("/withrole")
     @PreAuthorize("hasRole('ADMIN')")
-    public AppUserResponseDto createWithRole(@RequestBody AppUserWithRoleDto user) {
+    public AppUserResponseDto createWithRole(@RequestBody @Valid AppUserWithRoleDto user) {
         return appUserService.createWithRole(user);
     }
 
@@ -71,7 +51,7 @@ public class AppUserController {
 
     @PutMapping("/{id}")
     @PreAuthorize("@appUserService.hasPermission(#id)")
-    public AppUserResponseDto update(@PathVariable Integer id, @RequestBody AppUserDto user) {
+    public AppUserResponseDto update(@PathVariable Integer id, @RequestBody @Valid AppUserDto user) {
         return this.appUserService.update(id, user);
     }
 
@@ -80,14 +60,5 @@ public class AppUserController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         this.appUserService.delete(id);
-    }
-
-    @GetMapping("/validateRoles")
-    public String validateRoles() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            return "Authorities: " + authentication.getAuthorities();
-        }
-        return "No authentication";
     }
 }

@@ -3,6 +3,8 @@ package com.prax.crypto.portfolio;
 import com.prax.crypto.account.AppUser;
 import com.prax.crypto.bitfinex.BitfinexService;
 import com.prax.crypto.bitfinex.Ticker;
+import com.prax.crypto.portfolio.dto.PortfolioDto;
+import com.prax.crypto.portfolio.dto.PortfolioResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

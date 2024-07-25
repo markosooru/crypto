@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.prax.crypto.account.AppUser;
 import com.prax.crypto.account.AppUserService;
 import com.prax.crypto.base.BaseIntTest;
+import com.prax.crypto.portfolio.dto.PortfolioDto;
+import com.prax.crypto.portfolio.dto.PortfolioResponseDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

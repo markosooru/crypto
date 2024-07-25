@@ -1,4 +1,4 @@
-package com.prax.crypto.portfolio;
+package com.prax.crypto.portfolio.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -8,9 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record PortfolioResponseDto(
-        @NotNull
-        Integer id,
+public record PortfolioDto(
         @NotNull
         @Positive
         BigDecimal amount,
@@ -18,9 +16,6 @@ public record PortfolioResponseDto(
         String currency,
         @NotNull
         @PastOrPresent
-        LocalDateTime dateOfPurchase,
-        @NotNull
-        Integer appUserId,
-        BigDecimal amountEur
+        LocalDateTime dateOfPurchase
 ) {
 }
