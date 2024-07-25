@@ -1,21 +1,16 @@
 package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUser;
-import com.prax.crypto.account.AppUserRepository;
 import com.prax.crypto.portfolio.dto.PortfolioDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PortfolioMapperTest {
@@ -23,21 +18,18 @@ class PortfolioMapperTest {
     @InjectMocks
     private PortfolioMapper portfolioMapper;
 
-    @Mock
-    private AppUserRepository appUserRepository;
-
     @Test
     void toResponseDto_givenPortfolioEntity_mapsEntityToResponseDto() {
         // given
         var portfolio = new Portfolio(
                 1,
-                new BigDecimal("1.1234"),
+                new BigDecimal("0.12345678"),
                 "BTC",
                 LocalDateTime.now().minusDays(1),
                 false,
                 new AppUser()
         );
-        var amountEur = new BigDecimal("1000.123");
+        var amountEur = new BigDecimal("12345.67");
 
         // when
         var dto = portfolioMapper.toResponseDto(portfolio, amountEur);
@@ -54,23 +46,18 @@ class PortfolioMapperTest {
     void toEntity_givenPortfolioDto_mapsDtoToEntity() {
         // given
         var portfolioDto = new PortfolioDto(
-                new BigDecimal("1.1234"),
+                new BigDecimal("0.12345678"),
                 "BTC",
-                LocalDateTime.now().minusDays(1),
-                1
+                LocalDateTime.now().minusDays(1)
         );
-        var appUser = AppUser.builder().id(1).build();
-
-        // mock
-        when(appUserRepository.findById(anyInt())).thenReturn(Optional.ofNullable(appUser));
+        var appUser = new AppUser();
 
         // when
-        var result = portfolioMapper.toEntity(portfolioDto);
+        var result = portfolioMapper.toEntity(portfolioDto, appUser);
 
         // then
         assertEquals(portfolioDto.amount(), result.getAmount());
         assertEquals(portfolioDto.currency(), result.getCurrency());
         assertEquals(portfolioDto.dateOfPurchase(), result.getDateOfPurchase());
-        assertEquals(portfolioDto.appUserId(), result.getAppUser().getId());
     }
 }
