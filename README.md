@@ -1,27 +1,54 @@
-# Crypto portfolio API
+# Crypto Portfolio API
 
-This is a simple API that allows you to manage your crypto portfolio. Using Bitfinex API you can get the current price of your crypto assets.
+This API allows you to manage your crypto portfolio and fetch the current prices of your crypto assets using the Bitfinex API.
 
-## Run
+## Getting Started
 
-Run from the root directory:
-```bash
-docker-compose up
-./mvnw spring-boot:run
-```
-Application will be available at `http://localhost:8080/api/`
+### Prerequisites
 
-## Info
+- Docker
+- Java 21 or later
 
-Seeded with 3 users:
-```bash
-admin@crypto.com      appPass
-user@crypto.com       appPass
-user2@crypto.com      appPass
-```
+### Running the Application
 
-From `config/DataInitializer.java`
+1. Start the DB using Docker:
+   ```bash
+   docker-compose up
+   ```
+2. Build the application:
+    ```bash
+    ./mvnw clean install
+    ```
+3. Run the Spring Boot application:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
-## Swagger
+The application will be available at `http://localhost:8080/api/`.
 
-Swagger is available at `http://localhost:8080/swagger-ui.html`
+## API Documentation
+
+You can access the API documentation using Swagger UI at the following URL:
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html)
+
+## Seed Data
+
+The application comes with seeded data for initial testing. Here are the pre-configured users:
+
+| Email              | Password |
+|--------------------|----------|
+| admin@crypto.com   | appPass  |
+| user@crypto.com    | appPass  |
+| user2@crypto.com   | appPass  |
+
+Seed data is defined in `DataInitializer` class.
+
+## Features
+
+- **Manage Crypto Portfolio**: Add, update, and delete your crypto assets.
+- **Fetch Current Prices**: Retrieve the latest prices of your crypto assets using the Bitfinex API.
+
+## Security Configuration
+
+The application uses JWT for securing API endpoints. Refer to the `SecurityConfig` class for more details on the security setup.
