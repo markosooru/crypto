@@ -2,6 +2,7 @@ package com.prax.crypto.account;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.prax.crypto.portfolio.Portfolio;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,7 +43,7 @@ public class AppUser implements UserDetails {
     @NotEmpty
     private String password;
 
-    @OneToMany(mappedBy = "appUser")
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Portfolio> portfolioItems;
 

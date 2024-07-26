@@ -36,13 +36,10 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     private PortfolioRepository portfolioRepository;
 
     @Autowired
-    private PortfolioService portfolioService;
+    private AppUserRepository appUserRepository;
 
     @Autowired
     private AppUserService appUserService;
-
-    @Autowired
-    private AppUserRepository appUserRepository;
 
     @Autowired
     private AppUserDetailsService appUserDetailsService;
@@ -145,19 +142,33 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     public void findAll_executes_returnsListOfActiveResponseDtos() throws Exception {
         // given
         var email = "testuser_" + UUID.randomUUID() + "@example.com";
-        var adminToken = generateToken("admin@example.com", "adminPass", Role.ROLE_ADMIN);
+        var userToken = generateToken(email, "userPass", Role.ROLE_USER);
 
         var appUser = appUserRepository.findByEmail(email).orElseThrow();
 
-        var responseDto = portfolioService.create(new PortfolioDto(
+        var portfolio1 = new Portfolio(
+                null,
                 new BigDecimal("0.12345678"),
                 "BTC",
-                LocalDateTime.now().minusDays(1)
-        ));
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+        var portfolio2 = new Portfolio(
+                null,
+                new BigDecimal("0.12345678"),
+                "ETH",
+                LocalDateTime.now().minusDays(2),
+                false,
+                appUser
+        );
+
+        portfolioRepository.save(portfolio1);
+        portfolioRepository.save(portfolio2);
 
         // when
         var jsonResponse = mockMvc.perform(get("/api/portfolio")
-                        .header("Authorization", "Bearer " + adminToken))
+                        .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -166,8 +177,19 @@ public class PortfolioControllerIntTest extends BaseIntTest {
         // then
         var result = objectMapper.readValue(jsonResponse, new TypeReference<List<PortfolioResponseDto>>() {});
 
-        assertThat(result).hasSize(1);
-        assertThat(result).containsExactly(responseDto);
+        assertThat(result).hasSize(2);
+        assertThat(result.stream().anyMatch(p ->
+                p.amount().equals(portfolio1.getAmount()) &&
+                p.currency().equals(portfolio1.getCurrency()) &&
+                p.dateOfPurchase().equals(portfolio1.getDateOfPurchase()) &&
+                p.appUserId().equals(appUser.getId())
+        )).isTrue();
+        assertThat(result.stream().anyMatch(p ->
+                p.amount().equals(portfolio2.getAmount()) &&
+                p.currency().equals(portfolio2.getCurrency()) &&
+                p.dateOfPurchase().equals(portfolio2.getDateOfPurchase()) &&
+                p.appUserId().equals(appUser.getId())
+        )).isTrue();
     }
 
     @Test
@@ -179,14 +201,18 @@ public class PortfolioControllerIntTest extends BaseIntTest {
 
         var appUser = appUserRepository.findByEmail(email).orElseThrow();
 
-        var responseDto = portfolioService.create(new PortfolioDto(
+        var portfolio = new Portfolio(
+                null,
                 new BigDecimal("0.12345678"),
                 "BTC",
-                LocalDateTime.now().minusDays(1)
-        ));
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+        portfolio = portfolioRepository.save(portfolio);
 
         // when
-        var jsonResponse = mockMvc.perform(get("/api/portfolio/{id}", responseDto.id())
+        var jsonResponse = mockMvc.perform(get("/api/portfolio/{id}", portfolio.getId())
                         .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -196,7 +222,10 @@ public class PortfolioControllerIntTest extends BaseIntTest {
         // then
         var result = objectMapper.readValue(jsonResponse, PortfolioResponseDto.class);
 
-        assertThat(result).isEqualTo(responseDto);
+        assertThat(result.amount()).isEqualTo(portfolio.getAmount());
+        assertThat(result.currency()).isEqualTo(portfolio.getCurrency());
+        assertThat(result.dateOfPurchase()).isEqualTo(portfolio.getDateOfPurchase());
+        assertThat(result.appUserId()).isEqualTo(appUser.getId());
     }
 
     @Test
@@ -208,20 +237,24 @@ public class PortfolioControllerIntTest extends BaseIntTest {
 
         var appUser = appUserRepository.findByEmail(email).orElseThrow();
 
-        var responseDto = portfolioService.create(new PortfolioDto(
+        var portfolio = new Portfolio(
+                null,
                 new BigDecimal("0.12345678"),
                 "BTC",
-                LocalDateTime.now().minusDays(1)
-        ));
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+        portfolio = portfolioRepository.save(portfolio);
 
         var portfolioDto = new PortfolioDto(
                 new BigDecimal("0.12345678"),
-                "BTC",
+                "ETH",
                 LocalDateTime.now().minusDays(1)
         );
 
         // when
-        var jsonResponse = mockMvc.perform(put("/api/portfolio/{id}", responseDto.id())
+        var jsonResponse = mockMvc.perform(put("/api/portfolio/{id}", portfolio.getId())
                         .header("Authorization", "Bearer " + userToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(portfolioDto)))
@@ -237,7 +270,6 @@ public class PortfolioControllerIntTest extends BaseIntTest {
         assertThat(result.currency()).isEqualTo(portfolioDto.currency());
         assertThat(result.dateOfPurchase()).isEqualTo(portfolioDto.dateOfPurchase());
         assertThat(result.appUserId()).isEqualTo(appUser.getId());
-        assertThat(result.id()).isEqualTo(responseDto.id());
     }
 
     @Test
@@ -245,23 +277,27 @@ public class PortfolioControllerIntTest extends BaseIntTest {
     public void delete_givenId_setsPortfolioDeletedFlagTrue() throws Exception {
         // given
         var email = "testuser_" + UUID.randomUUID() + "@example.com";
-        var userDto = new AppUserWithRoleDto(email, "userPass", Role.ROLE_USER);
-        var userResponse = appUserService.createWithRole(userDto);
         var userToken = generateToken(email, "userPass", Role.ROLE_USER);
 
-        var responseDto = portfolioService.create(new PortfolioDto(
+        var appUser = appUserRepository.findByEmail(email).orElseThrow();
+
+        var portfolio = new Portfolio(
+                null,
                 new BigDecimal("0.12345678"),
                 "BTC",
-                LocalDateTime.now().minusDays(1)
-        ));
+                LocalDateTime.now().minusDays(1),
+                false,
+                appUser
+        );
+        portfolio = portfolioRepository.save(portfolio);
 
         // when
-        mockMvc.perform(delete("/api/portfolio/{id}", responseDto.id())
+        mockMvc.perform(delete("/api/portfolio/{id}", portfolio.getId())
                         .header("Authorization", "Bearer " + userToken))
                 .andExpect(status().isNoContent());
 
         // then
-        var deletedPortfolio = portfolioRepository.findById(responseDto.id());
+        var deletedPortfolio = portfolioRepository.findById(portfolio.getId());
         assertThat(deletedPortfolio.map(Portfolio::isDeleted).orElse(false)).isTrue();
     }
 

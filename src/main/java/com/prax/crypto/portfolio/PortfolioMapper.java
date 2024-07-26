@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 @Validated
@@ -20,7 +21,7 @@ public class PortfolioMapper {
                 portfolio.getCurrency(),
                 portfolio.getDateOfPurchase(),
                 portfolio.getAppUser().getId(),
-                amountEur
+                amountEur.setScale(2, RoundingMode.HALF_UP)
         );
     }
 

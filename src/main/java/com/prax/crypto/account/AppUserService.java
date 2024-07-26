@@ -49,6 +49,9 @@ public class AppUserService {
     }
 
     public void delete(Integer id) {
+        if (!appUserRepository.existsById(id)) {
+            throw new EntityNotFoundException("User not found");
+        }
         appUserRepository.deleteById(id);
     }
 

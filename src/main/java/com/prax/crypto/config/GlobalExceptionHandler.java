@@ -1,5 +1,6 @@
 package com.prax.crypto.config;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -42,6 +43,14 @@ public class GlobalExceptionHandler {
         } else {
             error.put("error", "A data integrity violation occurred.");
         }
+        return error;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public Map<String, String> handleEntityNotFoundException(EntityNotFoundException ex) {
+        var error = new HashMap<String, String>();
+        error.put("error", ex.getMessage());
         return error;
     }
 
