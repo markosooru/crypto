@@ -49,7 +49,8 @@ public class AppUser implements UserDetails {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Role role;
+    @Builder.Default
+    private Role role = Role.ROLE_USER;
 
     @Override
     public String getUsername() {

@@ -12,7 +12,6 @@ public class AppUserMapper {
         return AppUser.builder()
                 .email(appUserDto.email())
                 .password(appUserDto.password())
-                .role(Role.ROLE_USER)
                 .build();
     }
 
