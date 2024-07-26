@@ -319,7 +319,7 @@ class AppUserControllerIntTest extends BaseIntTest {
     @Transactional
     void deleteUser_givenUserTokenAndUserId_deletesAppUser() throws Exception {
         // given
-        var userEmail = "testuser_" + UUID.randomUUID() + 2 + "@example.com";
+        var userEmail = "testuser_" + UUID.randomUUID() + "@example.com";
         var userDto = new AppUserWithRoleDto(userEmail, "userPass", Role.ROLE_USER);
         var userResponse = appUserService.createWithRole(userDto);
         var userToken = generateToken(userEmail, "userPass", Role.ROLE_USER);
