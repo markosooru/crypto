@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Map;
@@ -343,7 +342,7 @@ class AppUserControllerIntTest extends BaseIntTest {
             appUserService.createWithRole(new AppUserWithRoleDto(email, password, role));
         }
         var userDetails = appUserDetailsService.loadUserByUsername(email);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+        var authentication = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
         return tokenService.generateToken(authentication);
     }
 }

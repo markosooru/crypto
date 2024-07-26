@@ -242,6 +242,9 @@ class AppUserServiceTest {
                 Role.ROLE_USER
         );
 
+        // mock
+        when(appUserRepository.existsById(1)).thenReturn(true);
+
         // when
         appUserService.delete(1);
 
