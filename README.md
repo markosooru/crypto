@@ -1,102 +1,27 @@
 # Crypto portfolio API
 
-This is a simple API that allows you to manage your crypto portfolio. You can add, remove, update and list your assets.
+This is a simple API that allows you to manage your crypto portfolio. Using Bitfinex API you can get the current price of your crypto assets.
 
-Using Maven, JPA and Postgres.
+## Run
 
-## Use
+Run from the root directory:
+```bash
+docker-compose up
+./mvnw spring-boot:run
+```
+Application will be available at `http://localhost:8080/api/`
 
-Run compose.yaml
+## Info
 
-Run CryptoApplication.java
-
-Application will be available at `http://localhost:8080`
-
-## AppUser endpoints
-
-#### GET /api/appusers
-
-- Returns a list of all users
-
-#### GET /api/appusers/{id}
-
-- Returns a user by id
-
-#### POST /api/appusers
-
-- Creates a new user using `userDTO`
-
-#### PUT /api/appusers/{id}
-
-- Updates a user by id
-
-#### DELETE /api/appusers/{id}
-
-- Deletes a user by id
-
-## PortfolioItem endpoints
-
-#### GET /api/portfolioitems
-
-- Returns a list of all portfolio items
-
-#### GET /api/portfolioitems/{id}
-
-- Returns a portfolio item by id
-
-#### POST /api/portfolioitems
-
-- Creates a new portfolio item using `portfolioItemDTO`
-
-#### PUT /api/portfolioitems/{id}
-
-- Updates a portfolio item by id
-
-#### DELETE /api/portfolioitems/{id}
-
-- Deletes a portfolio item by id
-
-## DTOs
-
-#### userDTO
-
-```json
-{
-  "username": "String",
-  "email": "String"
-}
+Seeded with 3 users:
+```bash
+admin@crypto.com      appPass
+user@crypto.com       appPass
+user2@crypto.com      appPass
 ```
 
-#### userResponseDTO
+From `config/DataInitializer.java`
 
-```json
-{
-  "id": "Integer",
-  "username": "String",
-  "email": "String",
-  "portfolioItems": "List<portfolioItem"
-}
-```
+## Swagger
 
-#### portfolioItemDTO
-
-```json
-{
-  "amount": "BigDecimal",
-  "currency": "String",
-  "dateOfPurchase": "LocalDateTime",
-  "appUserId": "Integer"
-}
-```
-
-#### portfolioItemResponseDTO
-
-```json
-{
-  "amount": "BigDecimal",
-  "currency": "String",
-  "dateOfPurchase": "LocalDateTime",
-  "appUserId": "Integer",
-  "amountEur": "BigDecimal"
-}
-```
+Swagger is available at `http://localhost:8080/swagger-ui.html`
