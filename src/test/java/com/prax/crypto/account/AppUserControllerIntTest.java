@@ -5,8 +5,8 @@ import com.prax.crypto.account.dto.AppUserDto;
 import com.prax.crypto.account.dto.AppUserResponseDto;
 import com.prax.crypto.account.dto.AppUserWithRoleDto;
 import com.prax.crypto.base.BaseIntTest;
+import com.prax.crypto.exception.UserNotFoundException;
 import com.prax.crypto.security.TokenService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +89,7 @@ class AppUserControllerIntTest extends BaseIntTest {
         // then
         var result = objectMapper.readValue(jsonResponse, new TypeReference<Map<String, String>>() {});
 
-        assertThat(result).containsEntry("error", "Employee with email: " + email + " already exists.");
+        assertThat(result).containsEntry("error", "User with email: " + email + " already exists.");
     }
 
     @Test
@@ -331,8 +331,8 @@ class AppUserControllerIntTest extends BaseIntTest {
         // then
         try {
             appUserService.findById(userResponse.id());
-            fail("Expected an EntityNotFoundException to be thrown");
-        } catch (EntityNotFoundException e) {
+            fail("Expected an UserNotFoundException to be thrown");
+        } catch (UserNotFoundException e) {
             assertThat(e.getMessage()).isEqualTo("User not found");
         }
     }

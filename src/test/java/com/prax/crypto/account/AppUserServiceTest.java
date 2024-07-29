@@ -3,7 +3,7 @@ package com.prax.crypto.account;
 import com.prax.crypto.account.dto.AppUserDto;
 import com.prax.crypto.account.dto.AppUserResponseDto;
 import com.prax.crypto.account.dto.AppUserWithRoleDto;
-import jakarta.persistence.EntityNotFoundException;
+import com.prax.crypto.exception.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -161,7 +161,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void findById_givenWrongId_throwsEntityNotFoundException() {
+    void findById_givenWrongId_throwsUserNotFoundException() {
         // given
         var appUser = new AppUser(
                 1,
@@ -175,7 +175,7 @@ class AppUserServiceTest {
         when(appUserRepository.findById(10)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> appUserService.findById(10));
+        assertThrows(UserNotFoundException.class, () -> appUserService.findById(10));
         verify(appUserRepository).findById(10);
     }
 
@@ -216,7 +216,7 @@ class AppUserServiceTest {
     }
 
     @Test
-    void update_givenWrongId_throwsEntityNotFoundException() {
+    void update_givenWrongId_throwsUserNotFoundException() {
         // given
         var appUserDto = new AppUserDto(
                 "testuser@example.com",
@@ -227,7 +227,7 @@ class AppUserServiceTest {
         when(appUserRepository.findById(1)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> appUserService.update(1, appUserDto));
+        assertThrows(UserNotFoundException.class, () -> appUserService.update(1, appUserDto));
         verify(appUserRepository).findById(1);
     }
 

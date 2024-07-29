@@ -2,9 +2,9 @@ package com.prax.crypto.portfolio;
 
 import com.prax.crypto.account.AppUserService;
 import com.prax.crypto.bitfinex.BitfinexService;
+import com.prax.crypto.exception.PortfolioNotFoundException;
 import com.prax.crypto.portfolio.dto.PortfolioDto;
 import com.prax.crypto.portfolio.dto.PortfolioResponseDto;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class PortfolioService {
         var currentUser = appUserService.getAuthenticatedUser();
 
         var portfolio = portfolioRepository.findActiveByIdAndAppUser(id, currentUser)
-                .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
+                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio item not found"));
 
         var amountEur = bitfinexService
                 .getCryptoFxInEur(portfolio.getCurrency())
@@ -74,7 +74,7 @@ public class PortfolioService {
                 .multiply(item.amount());
 
         var portfolio = portfolioRepository.findActiveByIdAndAppUser(id, currentUser)
-                .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
+                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio item not found"));
 
         portfolio.setAmount(item.amount());
         portfolio.setCurrency(item.currency());
@@ -88,7 +88,7 @@ public class PortfolioService {
         var currentUser = appUserService.getAuthenticatedUser();
 
         var portfolio = portfolioRepository.findActiveByIdAndAppUser(id, currentUser)
-                .orElseThrow(() -> new EntityNotFoundException("Portfolio item not found"));
+                .orElseThrow(() -> new PortfolioNotFoundException("Portfolio item not found"));
 
         portfolio.setDeleted(true);
         portfolioRepository.save(portfolio);

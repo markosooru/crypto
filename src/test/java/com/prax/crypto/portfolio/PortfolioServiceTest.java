@@ -3,9 +3,9 @@ package com.prax.crypto.portfolio;
 import com.prax.crypto.account.AppUser;
 import com.prax.crypto.account.AppUserService;
 import com.prax.crypto.bitfinex.BitfinexService;
+import com.prax.crypto.exception.PortfolioNotFoundException;
 import com.prax.crypto.portfolio.dto.PortfolioDto;
 import com.prax.crypto.portfolio.dto.PortfolioResponseDto;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -163,7 +163,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void findById_givenWrongId_throwsEntityNotFoundException() {
+    void findById_givenWrongId_throwsPortfolioNotFoundException() {
         // given
         var appUser = new AppUser();
 
@@ -173,7 +173,7 @@ class PortfolioServiceTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> portfolioService.findById(1));
+        assertThrows(PortfolioNotFoundException.class, () -> portfolioService.findById(1));
         verify(portfolioRepository).findActiveByIdAndAppUser(eq(1), eq(appUser));
     }
 
@@ -223,7 +223,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void update_givenWrongId_throwsEntityNotFoundException() {
+    void update_givenWrongId_throwsPortfolioNotFoundException() {
         // given
         var appUser = new AppUser();
 
@@ -239,7 +239,7 @@ class PortfolioServiceTest {
         when(portfolioRepository.findActiveByIdAndAppUser(1, appUser)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> portfolioService.update(1, portfolioDto));
+        assertThrows(PortfolioNotFoundException.class, () -> portfolioService.update(1, portfolioDto));
         verify(portfolioRepository).findActiveByIdAndAppUser(1, appUser);
     }
 
@@ -271,7 +271,7 @@ class PortfolioServiceTest {
     }
 
     @Test
-    void delete_givenWrongId_throwsEntityNotFoundException() {
+    void delete_givenWrongId_throwsPortfolioNotFoundException() {
         // given
         var appUser = new AppUser();
 
@@ -280,7 +280,7 @@ class PortfolioServiceTest {
         when(portfolioRepository.findActiveByIdAndAppUser(1, appUser)).thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(EntityNotFoundException.class, () -> portfolioService.delete(1));
+        assertThrows(PortfolioNotFoundException.class, () -> portfolioService.delete(1));
         verify(portfolioRepository).findActiveByIdAndAppUser(1, appUser);
     }
 }
